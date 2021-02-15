@@ -8,80 +8,90 @@ package Pong;
  Description:
  ************************************************************************/
 
-import javafx.application.Application;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-
-import java.awt.*;
 
 
 public class RectangleTeclat extends Rectangle {
 
 
+    Posicio posicio;
+    int altura;
+    int gruix;
+    int velocitat = 15;
+    Pane canvas;
+    Node rectangle;
+    public RectangleTeclat(Pane canvas, int posX, int posY, int altura, int gruix, String color) {
+        posicio = new Posicio(posX, posY);
+        this.altura = altura;
+        this.canvas = canvas;
+        this.rectangle = new Rectangle(posicio.posX, posicio.posY, gruix, altura);
+        //this.bolla=new Circle(posicio.posX - radi, posicio.posY - radi, radi, Color.BLUE);
+        posicio.posX = 0;
+        posicio.posY = 0;
+        this.rectangle.setLayoutX(posicio.posX);
+        this.rectangle.setLayoutY(posicio.posY);
+        this.canvas.getChildren().add(this.rectangle);
+        //this.rectangle.setFill(Color.BLACK);
+        this.rectangle.setStyle("-fx-fill:" + color + ";");
+
+    }
+
+    /**
+     * Mou rectangle cap amunt
+     */
+    public void mouAmunt() {
+        posicio.posY = posicio.posY - this.velocitat;
+        this.repinta();
+    }
+
+    /**
+     * Mou rectangle cap abaix
+     */
+    public void mouAbaix() {
+        posicio.posY = posicio.posY + this.velocitat;
+        this.repinta();
+    }
+
+    private void repinta() {
+        this.rectangle.setLayoutX(posicio.posX);
+        this.rectangle.setLayoutY(posicio.posY);
+    }
+
+    public int checkRectangleLimits() {
+
+        //comprova els límits dels rectangles
+        final boolean alLimitSuperior = -canvas.getHeight() >= ((rectangle.getLayoutY()) * 2 - altura);
+        final boolean alLimitInferior = 0 <= ((rectangle.getLayoutY()) - 2 * altura);
 
 
-        class Posicio {
+        //retornam segons el limit trobat
+        if (alLimitSuperior) {
+            System.out.println("limit superior");
 
-            int posX;
-            int posY;
-
-            public Posicio(int x, int y) {
-                this.posX = x;
-                this.posY = y;
-            }
+            return +1;
         }
 
+        if (alLimitInferior) {
 
-
-        Posicio posicio;
-        int altura;
-        int gruix;
-        int velocitat = 15;
-        Pane canvas;
-        Node rectangle;
-
-
-
-        public RectangleTeclat(Pane canvas, int posX, int posY, int altura, int gruix, String color){
-            posicio=new Posicio(posX, posY);
-            this.altura=altura;
-            this.canvas = canvas;
-            this.rectangle= new Rectangle( posicio.posX, posicio.posY, gruix, altura);
-            //this.bolla=new Circle(posicio.posX - radi, posicio.posY - radi, radi, Color.BLUE);
-            posicio.posX=0;
-            posicio.posY=0;
-            this.rectangle.setLayoutX(posicio.posX);
-            this.rectangle.setLayoutY(posicio.posY);
-            this.canvas.getChildren().add(this.rectangle);
-            //this.rectangle.setFill(Color.BLACK);
-            this.rectangle.setStyle("-fx-fill:" + color + ";");
-
+            System.out.println("limit inferior");
+            return -1;
+        } else {
+            return 0;
         }
+    }
 
-        /**
-         * Mou rectangle cap amunt
-         */
-        public void mouAmunt() {
-            posicio.posY=posicio.posY-this.velocitat;
-            this.repinta();
+    class Posicio {
+
+        int posX;
+        int posY;
+
+        public Posicio(int x, int y) {
+            this.posX = x;
+            this.posY = y;
         }
-
-
-        /**
-         * Mou rectangle cap abaix
-         */
-        public void mouAbaix() {
-            posicio.posY=posicio.posY+this.velocitat;
-            this.repinta();
-        }
-
-        private void repinta() {
-            this.rectangle.setLayoutX(posicio.posX);
-            this.rectangle.setLayoutY(posicio.posY);
-        }
-
+    }
 
 
 /*
@@ -111,8 +121,6 @@ public class RectangleTeclat extends Rectangle {
         //final boolean alLimitInferior = cercle.getLayoutY() >= (limits.getMaxY() - cercle.getRadius());
         //final boolean alLimitSuperior = cercle.getLayoutY() <= (limits.getMinY() + cercle.getRadius());
     }*/
-
-
 
 
 }

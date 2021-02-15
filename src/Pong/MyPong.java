@@ -1,5 +1,6 @@
 package Pong;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -10,9 +11,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import static java.lang.StrictMath.abs;
 
 /************************************************************************
  Made by        PatrickSys
@@ -28,16 +30,21 @@ public class MyPong extends Application {
         public double deltaX;
         public double deltaY;
         Circle circle;
+        public double velocitat=1;
         public Ball(int radi,Color color) {
             this.circle=new Circle(radi, color);
-            this.deltaX=1;
-            this.deltaY=1;
+            this.deltaX=velocitat;
+            this.deltaY=velocitat;
+        }
+        private void setVelocitat(double velocitat){
+            this.deltaX=velocitat;
+            this.deltaY=velocitat;
         }
     }
 
     public static Pane canvas;
-    double amp = 480;
-    double alt = 480;
+    double amp = 800;
+    double alt = 600;
     int radi =15;
 
 
@@ -62,81 +69,74 @@ public class MyPong extends Application {
         //cream rectangles
         int altura=120;
         int gruix=15;
-        RectangleTeclat rectangle1 = new RectangleTeclat(canvas, 10,90, altura, gruix, "red");
-        RectangleTeclat rectangle2 = new RectangleTeclat(canvas, 220, 90, altura, gruix, "chartreuse");
+        RectangleTeclat rectangle1 = new RectangleTeclat(canvas, gruix,((int)alt-altura)/2, altura, gruix, "red");
+        RectangleTeclat rectangle2 = new RectangleTeclat(canvas, ((int)amp-gruix*2), ((int)alt-altura)/2, altura, gruix, "chartreuse");
 
 
+        //cream bolla
         Ball ball = new Ball(radi, Color.BLUE);
-        ball.circle.relocate(240-radi, 240-radi);
+
+        ball.circle.relocate((amp/2)-radi, (alt/2)-radi);
 
 
+        //afegim al panell
         canvas.getChildren().addAll(ball.circle);
         canvas.getChildren().addAll(rectangle1, rectangle2);
 
 
         canvas.setOnKeyPressed(e -> {
+
             switch (e.getCode()) {
-                case UP:
-                    rectangle2.mouAmunt();
-                    break;
-                case DOWN:
-                    rectangle2.mouAbaix();
-                    break;
                 case W:
-                    rectangle1.mouAmunt();
+                  if(checkRectangleLimits(rectangle1)!=1) {
+                      rectangle1.mouAmunt();
+                  }
                     break;
                 case S:
-                    rectangle1.mouAbaix();
+
+                    if(checkRectangleLimits(rectangle1)!=-1) {
+                        rectangle1.mouAbaix();
+                    }
+
                     break;
+
+                case UP:
+                 if(checkRectangleLimits(rectangle2)!=1) {
+                        rectangle2.mouAmunt();
+                    }
+                    break;
+                case DOWN:
+
+                    if(checkRectangleLimits(rectangle2)!=-1) {
+                        rectangle2.mouAbaix();
+                    }
+                    break;
+
             }
+
+
         });
 
-        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(2000), new EventHandler<ActionEvent>() {
+
+        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(5), new EventHandler<ActionEvent>() {
 
 
 
 
-            // Formula en radians
-            //double deltaX = 3*Math.cos(Math.PI/3);
-            //double deltaY = 3*Math.sin(Math.PI/3);
-
-            // Formula en graus
-            double angle_en_radians =Math.toRadians(30);
-            int velocitat=9;
-            double deltaX = velocitat*Math.cos(angle_en_radians);
-            double deltaY = velocitat*Math.sin(angle_en_radians);
-
-            // Simulació gravitatòria
-            double temps=0;
 
 
-            final Bounds limits = canvas.getBoundsInLocal();
 
             @Override
             public void handle(final ActionEvent t) {
+
+
+
+
                 boolean alreadyMoved = false;
 
+                moveBall(ball);
+                checkCollision(ball, rectangle1, rectangle2);
 
-                ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
-                ball.circle.setLayoutY(ball.circle.getLayoutY() + ball.deltaY);
-
-
-
-                checkRectangleLimits(rectangle1, limits);
-                checkRectangleLimits(rectangle2,limits);
-
-
-                checkBallLimits(ball, limits);
-                while(!alreadyMoved) {
-                    checkCollision(ball, rectangle1, rectangle2);
-                    alreadyMoved = true;
-                }
-
-                //System.out.println(rectangle1.getLayoutY());
-                System.out.println("rect1 X : " + rectangle1.posicio.posX + " posY: " + rectangle1.posicio.posY );
-
-                //System.out.println(rectangle2.getLayoutY());
-                //System.out.println("rect2 X : " + rectangle2.posicio.posX + " posY: " + rectangle2.posicio.posY );
                 }
         }));
 
@@ -151,15 +151,15 @@ public class MyPong extends Application {
         if(ball.circle.getBoundsInParent().intersects(rect1.rectangle.getBoundsInParent())||ball.circle.getBoundsInParent().intersects(rect2.rectangle.getBoundsInParent())){
             ball.deltaX *= -1;
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
+            //ball.setVelocitat(ball.velocitat +=0.1);
         }
 
 
 
     }
 
-    private void checkBallLimits(Ball ball, Bounds limits){
-
-
+    private void checkBallLimits(Ball ball){
+        final Bounds limits = canvas.getBoundsInLocal();
         final boolean alLimitDret = ball.circle.getLayoutX() >= (limits.getMaxX() - ball.circle.getRadius());
         final boolean alLimitEsquerra = ball.circle.getLayoutX() <= (limits.getMinX() + ball.circle.getRadius());
         final boolean alLimitInferior = ball.circle.getLayoutY() >= (limits.getMaxY() - ball.circle.getRadius());
@@ -169,8 +169,6 @@ public class MyPong extends Application {
         if (alLimitDret || alLimitEsquerra) {
 
             // Multiplicam pel signe de deltaX per mantenir la trajectoria
-
-
             ball.deltaX *= -1;
         }
         if (alLimitInferior || alLimitSuperior) {
@@ -179,22 +177,39 @@ public class MyPong extends Application {
             ball.deltaY *= -1;
         }
     }
+    private void moveBall(Ball ball){
 
-    private int checkRectangleLimits(RectangleTeclat rectangle, Bounds limits){
+        //comprova limits i recoloca bolla
+        checkBallLimits(ball);
+        ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
+        ball.circle.setLayoutY(ball.circle.getLayoutY() + ball.deltaY);
 
-        int limitReached=0;
-        final boolean alLimitInferior = rectangle.rectangle.getLayoutY() >= (limits.getMaxY() - rectangle.rectangle.getLayoutY());
-        final boolean alLimitSuperior =  rectangle.rectangle.getLayoutY() <= (limits.getMinY() + rectangle.rectangle.getLayoutY());
-//-180 adalt, 180 abaix
+    }
 
+    private int checkRectangleLimits(RectangleTeclat rectangle){
+
+        //comprova els límits dels rectangles
+        final boolean alLimitSuperior = -alt >= ((rectangle.rectangle.getLayoutY())*2-rectangle.altura);
+        final boolean alLimitInferior = 0 <=((rectangle.rectangle.getLayoutY())-2*rectangle.altura);
+
+
+        //retornam segons el limit trobat
+        if(alLimitSuperior){
+            System.out.println("limit superior");
+
+            return +1;
+        }
 
         if(alLimitInferior){
-            limitReached = -1;
+
+            System.out.println("limit inferior");
+            return -1;
         }
-        if(alLimitSuperior){
-            limitReached = +1;
+
+        else {
+            return 0;
         }
-        return limitReached;
     }
-    }
+
+}
 

@@ -38,7 +38,7 @@ public class RectangleTeclat extends Rectangle {
         Posicio posicio;
         int altura;
         int gruix;
-        int velocitat = 10;
+        int velocitat = 15;
         Pane canvas;
         Node rectangle;
 
@@ -49,8 +49,9 @@ public class RectangleTeclat extends Rectangle {
             this.altura=altura;
             this.canvas = canvas;
             this.rectangle= new Rectangle( posicio.posX, posicio.posY, gruix, altura);
-            posicio.posX=posX;
-            posicio.posY=posY;
+            //this.bolla=new Circle(posicio.posX - radi, posicio.posY - radi, radi, Color.BLUE);
+            posicio.posX=0;
+            posicio.posY=0;
             this.rectangle.setLayoutX(posicio.posX);
             this.rectangle.setLayoutY(posicio.posY);
             this.canvas.getChildren().add(this.rectangle);

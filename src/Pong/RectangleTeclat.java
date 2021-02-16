@@ -16,78 +16,75 @@ import javafx.scene.shape.Rectangle;
 public class RectangleTeclat extends Rectangle {
 
 
-    Posicio posicio;
-    int altura;
-    int gruix;
-    int velocitat = 15;
+    Position position;
+    int height;
+    int speed = 15;
     Pane canvas;
     Node rectangle;
-    public RectangleTeclat(Pane canvas, int posX, int posY, int altura, int gruix, String color) {
-        posicio = new Posicio(posX, posY);
-        this.altura = altura;
+    public RectangleTeclat(Pane canvas, int posX, int posY, int height, int width, String color) {
+        position = new Position(posX, posY);
+        this.height = height;
         this.canvas = canvas;
-        this.rectangle = new Rectangle(posicio.posX, posicio.posY, gruix, altura);
-        //this.bolla=new Circle(posicio.posX - radi, posicio.posY - radi, radi, Color.BLUE);
-        posicio.posX = 0;
-        posicio.posY = 0;
-        this.rectangle.setLayoutX(posicio.posX);
-        this.rectangle.setLayoutY(posicio.posY);
+        this.rectangle = new Rectangle(position.posX, position.posY, width, height);
+        position.posX = 0;
+        position.posY = 0;
+        this.rectangle.setLayoutX(position.posX);
+        this.rectangle.setLayoutY(position.posY);
         this.canvas.getChildren().add(this.rectangle);
-        //this.rectangle.setFill(Color.BLACK);
         this.rectangle.setStyle("-fx-fill:" + color + ";");
 
     }
 
     /**
-     * Mou rectangle cap amunt
+     * Move rectangle up
      */
-    public void mouAmunt() {
-        posicio.posY = posicio.posY - this.velocitat;
-        this.repinta();
+    public void moveUp() {
+        position.posY = position.posY - this.speed;
+        this.repaint();
     }
 
     /**
-     * Mou rectangle cap abaix
+     * Move rectangle down
      */
-    public void mouAbaix() {
-        posicio.posY = posicio.posY + this.velocitat;
-        this.repinta();
+    public void moveDown() {
+        position.posY = position.posY + this.speed;
+        this.repaint();
     }
 
-    private void repinta() {
-        this.rectangle.setLayoutX(posicio.posX);
-        this.rectangle.setLayoutY(posicio.posY);
+    private void repaint() {
+        this.rectangle.setLayoutX(position.posX);
+        this.rectangle.setLayoutY(position.posY);
     }
 
     public int checkRectangleLimits() {
 
         //comprova els límits dels rectangles
-        final boolean alLimitSuperior = -canvas.getHeight() >= ((rectangle.getLayoutY()) * 2 - altura);
-        final boolean alLimitInferior = 0 <= ((rectangle.getLayoutY()) - 2 * altura);
+        final boolean atTopBound = -canvas.getHeight() >= ((rectangle.getLayoutY()) * 2 - height);
+        final boolean atBottomBound = 0 <= ((rectangle.getLayoutY()) - 2 * height);
 
 
         //retornam segons el limit trobat
-        if (alLimitSuperior) {
-            System.out.println("limit superior");
+        if (atTopBound) {
+            System.out.println("top bound");
 
             return +1;
         }
 
-        if (alLimitInferior) {
+        if (atBottomBound) {
 
-            System.out.println("limit inferior");
+            System.out.println("bot bound");
             return -1;
         } else {
             return 0;
         }
     }
 
-    class Posicio {
+    class Position {
 
         int posX;
         int posY;
 
-        public Posicio(int x, int y) {
+        public Position(int x, int y) {
             this.posX = x;
             this.posY = y;
         }

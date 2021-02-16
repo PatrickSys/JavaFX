@@ -1,16 +1,13 @@
 package Pong;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -28,8 +25,8 @@ public class MyPong extends Application {
 
 
     public static Pane canvas;
-    double amp = 800;
-    double alt = 600;
+    double WIDTH = 800;
+    double HEIGHT = 600;
     int radi =15;
 
 
@@ -42,28 +39,28 @@ public class MyPong extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         canvas = new Pane();
-        final Scene scene = new Scene(canvas, amp, alt);
+        final Scene scene = new Scene(canvas, WIDTH, HEIGHT);
 
 
-        //Cream escena, amb el panell, i mesures
+        //create scene, with pane
         primaryStage.setTitle("P O N G");
         primaryStage.setScene(scene);
         primaryStage.show();
         canvas.requestFocus();
 
-        //cream rectangles
-        int altura=120;
-        int gruix=15;
-        RectangleTeclat rectangle1 = new RectangleTeclat(canvas, gruix,((int)alt-altura)/2, altura, gruix, "red");
-        RectangleTeclat rectangle2 = new RectangleTeclat(canvas, ((int)amp-gruix*2), ((int)alt-altura)/2, altura, gruix, "chartreuse");
+        //create rectangles
+        int rectHeight=120;
+        int rectWidth=15;
+        RectangleTeclat rectangle1 = new RectangleTeclat(canvas, rectWidth,((int) HEIGHT -rectHeight)/2, rectHeight, rectWidth, "red");
+        RectangleTeclat rectangle2 = new RectangleTeclat(canvas, ((int) WIDTH -rectWidth*2), ((int) HEIGHT -rectHeight)/2, rectHeight, rectWidth, "chartreuse");
 
 
-        //cream bolla
+        //create the ball
         Ball ball = new Ball(canvas, radi, Color.BLUE);
-        ball.circle.relocate((amp/2)-radi, (alt/2)-radi);
+        ball.circle.relocate((WIDTH /2)-radi, (HEIGHT /2)-radi);
 
 
-        //afegim al panell
+        //add shapes to pane
         canvas.getChildren().addAll(ball.circle);
         canvas.getChildren().addAll(rectangle1, rectangle2);
 
@@ -73,26 +70,26 @@ public class MyPong extends Application {
             switch (e.getCode()) {
                 case W:
                   if(rectangle1.checkRectangleLimits()!=1) {
-                      rectangle1.mouAmunt();
+                      rectangle1.moveUp();
                   }
                     break;
                 case S:
 
                     if(rectangle1.checkRectangleLimits()!=-1) {
-                        rectangle1.mouAbaix();
+                        rectangle1.moveDown();
                     }
 
                     break;
 
                 case UP:
                  if(rectangle2.checkRectangleLimits()!=1) {
-                        rectangle2.mouAmunt();
+                        rectangle2.moveUp();
                     }
                     break;
                 case DOWN:
 
                     if(rectangle2.checkRectangleLimits()!=-1) {
-                        rectangle2.mouAbaix();
+                        rectangle2.moveDown();
                     }
                     break;
 

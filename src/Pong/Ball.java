@@ -1,11 +1,10 @@
 package Pong;
-//************************************************************************
-//  Made by        PatrickSys
-//  Date           14/02/2021
-//  Package        Pong
-//
-// Description 
-//************************************************************************
+/************************************************************************
+ Made by        PatrickSys
+ Date           14/02/2021
+ Package        Pong
+ Description:
+ ************************************************************************/
 
 
 import javafx.geometry.Bounds;
@@ -17,15 +16,15 @@ import javafx.scene.shape.Circle;
         public double deltaX;
         public double deltaY;
         Circle circle;
-        public double velocitat=1;
+        public double speed =1;
         Pane canvas;
 
 
 
         public Ball(Pane canvas, int radi,Color color) {
                 this.circle = new Circle(radi, color);
-                this.deltaX = velocitat;
-        this.deltaY = velocitat;
+                this.deltaX = speed;
+        this.deltaY = speed;
         this.canvas=canvas;
         }
 
@@ -33,7 +32,7 @@ import javafx.scene.shape.Circle;
 
         public void moveBall(){
 
-                //comprova limits i recoloca bolla
+                //check limits and relocates ball
                 checkBallLimits();
                 circle.setLayoutX(circle.getLayoutX() + deltaX);
                 circle.setLayoutY(circle.getLayoutY() + deltaY);
@@ -49,20 +48,21 @@ import javafx.scene.shape.Circle;
 
                 if (rightLimit || leftLimit) {
 
-                        // Multiplicam pel signe de deltaX per mantenir la trajectoria
+                        // Inverse X to mantain trajectory
                         deltaX *= -1;
                 }
                 if (botLimit || topLimit) {
 
-                        // Multiplicam pel signe de deltaX per mantenir la trajectoria
+                        // Inverse X to mantain trajectory
                         deltaY *= -1;
                 }
         }
 
 
-        private void setVelocitat(double velocitat){
-                this.deltaX=velocitat;
-                this.deltaY=velocitat;
+        //on develope
+        private void setSpeed(double speed){
+                this.deltaX= speed;
+                this.deltaY= speed;
                   }
         }
 

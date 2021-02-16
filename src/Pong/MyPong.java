@@ -28,6 +28,10 @@ public class MyPong extends Application {
     double WIDTH = 800;
     double HEIGHT = 600;
     int radi =15;
+    int paddleHeight = 120;
+    int paddleWidth = 15;
+    int paddle1PosX = 20;
+    int paddle2PosX = 760;
 
 
 
@@ -44,15 +48,15 @@ public class MyPong extends Application {
 
         //create scene, with pane
         primaryStage.setTitle("P O N G");
+        canvas.setStyle("-fx-background-color: BLACK ");
         primaryStage.setScene(scene);
         primaryStage.show();
         canvas.requestFocus();
 
-        //create rectangles
-        int rectHeight=120;
-        int rectWidth=15;
-        RectangleTeclat rectangle1 = new RectangleTeclat(canvas, rectWidth,((int) HEIGHT -rectHeight)/2, rectHeight, rectWidth, "red");
-        RectangleTeclat rectangle2 = new RectangleTeclat(canvas, ((int) WIDTH -rectWidth*2), ((int) HEIGHT -rectHeight)/2, rectHeight, rectWidth, "chartreuse");
+
+        //create players with it's paddles
+        Player player1 = new Player(canvas, paddle1PosX, paddleHeight, paddleWidth);
+        Player player2 = new Player(canvas,paddle2PosX, paddleHeight, paddleWidth);
 
 
         //create the ball
@@ -62,34 +66,35 @@ public class MyPong extends Application {
 
         //add shapes to pane
         canvas.getChildren().addAll(ball.circle);
-        canvas.getChildren().addAll(rectangle1, rectangle2);
+        canvas.getChildren().addAll(player1.paddle, player2.paddle);
 
 
+        //case on paddle moves
         canvas.setOnKeyPressed(e -> {
 
             switch (e.getCode()) {
                 case W:
-                  if(rectangle1.checkRectangleLimits()!=1) {
-                      rectangle1.moveUp();
+                  if(player1.paddle.checkPaddleBounds()!=1) {
+                      player1.paddle.moveUp();
                   }
                     break;
                 case S:
 
-                    if(rectangle1.checkRectangleLimits()!=-1) {
-                        rectangle1.moveDown();
+                    if(player1.paddle.checkPaddleBounds()!=-1) {
+                        player1.paddle.moveDown();
                     }
 
                     break;
 
                 case UP:
-                 if(rectangle2.checkRectangleLimits()!=1) {
-                        rectangle2.moveUp();
+                 if(player2.paddle.checkPaddleBounds()!=1) {
+                        player2.paddle.moveUp();
                     }
                     break;
                 case DOWN:
 
-                    if(rectangle2.checkRectangleLimits()!=-1) {
-                        rectangle2.moveDown();
+                    if(player2.paddle.checkPaddleBounds()!=-1) {
+                        player2.paddle.moveDown();
                     }
                     break;
 
@@ -97,34 +102,56 @@ public class MyPong extends Application {
         });
 
 
+        //thread main is calling moveBall while checking collisions between paddles and the ball
         final Timeline loop = new Timeline(new KeyFrame(Duration.millis(5), new EventHandler<ActionEvent>() {
-
-
 
             @Override
             public void handle(final ActionEvent t) {
 
-                boolean alreadyMoved = false;
 
                 ball.moveBall();
-                checkCollision(ball, rectangle1, rectangle2);
+                checkCollision(ball, player1.paddle);
+                checkCollision(ball, player2.paddle);
 
                 }
         }));
+
 
         loop.setCycleCount(Timeline.INDEFINITE);
         loop.play();
     }
 
+    //Checks collision between paddles and ball
+    private void checkCollision(Ball ball, Paddle paddle){
 
-    private void checkCollision(Ball ball, RectangleTeclat rect1, RectangleTeclat rect2){
 
 
-        if(ball.circle.getBoundsInParent().intersects(rect1.rectangle.getBoundsInParent())||ball.circle.getBoundsInParent().intersects(rect2.rectangle.getBoundsInParent())){
-            ball.deltaX *= -1;
+        if(ball.circle.getBoundsInParent().intersects(paddle.paddle.getBoundsInParent())){
+
+            System.out.println(paddle.getBotPosition());
+            System.out.println(ball.circle.getLayoutX() + " ball X");
+            System.out.println(ball.circle.getRadius() + " circ rad");
+
+
+            //check if the ball touches paddle bot or top  then reverse Y
+            if(ball.circle.getLayoutX()<paddle1PosX+paddleWidth+ball.circle.getRadius() || ball.circle.getLayoutX() > paddle2PosX - ball.circle.getRadius()){
+                System.out.println("TOCA ");
+                ball.deltaY *= -1;
+            }
+
+            else{
+                ball.deltaX *= -1;
+
+            }
+
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
-            //ball.setVelocitat(ball.velocitat +=0.1);
+
         }
+
+    }
+
+
+    private void checkGoal(Ball ball){
 
 
 

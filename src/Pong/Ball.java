@@ -16,7 +16,7 @@ import javafx.scene.shape.Circle;
         public double deltaX;
         public double deltaY;
         Circle circle;
-        public double speed =1;
+        public double speed = 1;
         Pane canvas;
 
 
@@ -24,8 +24,8 @@ import javafx.scene.shape.Circle;
         public Ball(Pane canvas, int radi,Color color) {
                 this.circle = new Circle(radi, color);
                 this.deltaX = speed;
-        this.deltaY = speed;
-        this.canvas=canvas;
+                this.deltaY = speed;
+                this.canvas=canvas;
         }
 
 
@@ -33,27 +33,30 @@ import javafx.scene.shape.Circle;
         public void moveBall(){
 
                 //check limits and relocates ball
-                checkBallLimits();
+                checkBallBounds();
                 circle.setLayoutX(circle.getLayoutX() + deltaX);
                 circle.setLayoutY(circle.getLayoutY() + deltaY);
         }
 
-        private void checkBallLimits(){
+        private void checkBallBounds(){
                 final Bounds bounds = canvas.getBoundsInLocal();
                 final boolean rightLimit = circle.getLayoutX() >= (bounds.getMaxX() - circle.getRadius());
                 final boolean leftLimit = circle.getLayoutX() <= (bounds.getMinX() + circle.getRadius());
                 final boolean botLimit = circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius());
                 final boolean topLimit = circle.getLayoutY() <= (bounds.getMinY() + circle.getRadius());
 
+               //System.out.println(circle.getLayoutY() + "circle Y");
+
 
                 if (rightLimit || leftLimit) {
 
                         // Inverse X to mantain trajectory
                         deltaX *= -1;
+                        System.out.println(circle.getLayoutX());
                 }
                 if (botLimit || topLimit) {
 
-                        // Inverse X to mantain trajectory
+                        // Inverse Y to mantain trajectory
                         deltaY *= -1;
                 }
         }

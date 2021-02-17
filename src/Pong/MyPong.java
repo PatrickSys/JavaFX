@@ -34,7 +34,7 @@ public class MyPong extends Application {
      */
     public static Pane canvas;
     private final int WIDTH = 800;
-    private final int HEIGHT = 600;
+    private final int HEIGHT = 800;
     private final int radius = 15;
     private final int paddleHeight = 100;
     private final int paddleWidth = 10;

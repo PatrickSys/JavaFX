@@ -88,9 +88,11 @@ public class Paddle extends Rectangle {
     public int checkPaddleBounds() {
 
         // TODO limits relatius
-        //comprova els límits dels rectangles
-        final boolean atTopBound = -canvas.getHeight() >= ((paddle.getLayoutY()) * 2 - this.height);
-        final boolean atBottomBound = 0 <= ((paddle.getLayoutY()) - 2 * this.height);
+        //bounds calculation
+        final boolean atTopBound = -canvas.getHeight() > ((paddle.getLayoutY()) * 2 - (canvas.getHeight()/5));
+        final boolean atBottomBound = 0 == ((paddle.getLayoutY()) - 2 * (canvas.getHeight()/5));
+
+        System.out.println(paddle.getLayoutY());
 
 
         //retornam segons el limit trobat

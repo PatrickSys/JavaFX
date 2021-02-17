@@ -87,7 +87,6 @@ public class BollaTeclat extends Application {
          *
          */
         public void mouDiagonal() {
-            // TODO Auto-generated method stub
             bolla1.mouDre();
             bolla1.mouAbaix();
         }

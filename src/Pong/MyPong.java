@@ -1,5 +1,6 @@
 package Pong;
 
+import PongSounds.Sounds;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -10,6 +11,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
 
 
 /************************************************************************
@@ -23,21 +29,24 @@ import javafx.util.Duration;
 public class MyPong extends Application {
 
 
-
+    /**
+     * Attributes
+     */
     public static Pane canvas;
-    double WIDTH = 800;
-    double HEIGHT = 600;
-    int radi =15;
-    int paddleHeight = 120;
-    int paddleWidth = 15;
-    int paddle1PosX = 20;
-    int paddle2PosX = 760;
+    private final int WIDTH = 800;
+    private final int HEIGHT = 600;
+    private final int radius = 15;
+    private final int paddleHeight = 100;
+    private final int paddleWidth = 10;
+    private final int paddle1PosX = 20;
+    private final int paddle2PosX = 760;
 
 
 
     public static void main(String[] args) {
         launch(args);
     }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -60,8 +69,8 @@ public class MyPong extends Application {
 
 
         //create the ball
-        Ball ball = new Ball(canvas, radi, Color.BLUE);
-        ball.circle.relocate((WIDTH /2)-radi, (HEIGHT /2)-radi);
+        Ball ball = new Ball(canvas, radius, Color.BLUE);
+        ball.circle.relocate((WIDTH /2)- radius, (HEIGHT /2)- radius);
 
 
         //add shapes to pane
@@ -103,15 +112,15 @@ public class MyPong extends Application {
 
 
         //thread main is calling moveBall while checking collisions between paddles and the ball
-        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(5), new EventHandler<ActionEvent>() {
+        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(3), new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(final ActionEvent t) {
 
 
-                ball.moveBall();
-                checkCollision(ball, player1.paddle);
-                checkCollision(ball, player2.paddle);
+
+                play(ball, player1, player2);
+
 
                 }
         }));
@@ -121,19 +130,43 @@ public class MyPong extends Application {
         loop.play();
     }
 
-    //Checks collision between paddles and ball
+
+    /**
+     * Main method play, moves the ball while checking if a goal is scored
+     * checks collisions
+     * @param ball
+     * @param player1
+     * @param player2
+     */
+    private void play(Ball ball, Player player1, Player player2){
+
+        //invoke moveBall then play around it
+        int scored = ball.moveBall();
+        checkGoal(scored);
+        checkCollision(ball, player1.paddle);
+        checkCollision(ball, player2.paddle);
+
+
+    }
+
+    /**
+     *Checks collision between paddle and ball
+     *if top or bottom of the paddle are hit, it only reverses Y
+     */
     private void checkCollision(Ball ball, Paddle paddle){
 
 
 
+
+
+        //if bounds intersect means they're colliding
         if(ball.circle.getBoundsInParent().intersects(paddle.paddle.getBoundsInParent())){
 
-            System.out.println(paddle.getBotPosition());
-            System.out.println(ball.circle.getLayoutX() + " ball X");
-            System.out.println(ball.circle.getRadius() + " circ rad");
+            //plays bounce sound
+            File bounce = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PaddleBounce.wav");
+            PongSounds.Sounds.playSound(bounce);
 
-
-            //check if the ball touches paddle bot or top  then reverse Y
+            //check if the ball touches paddle bot or top then reverse Y
             if(ball.circle.getLayoutX()<paddle1PosX+paddleWidth+ball.circle.getRadius() || ball.circle.getLayoutX() > paddle2PosX - ball.circle.getRadius()){
                 System.out.println("TOCA ");
                 ball.deltaY *= -1;
@@ -144,6 +177,7 @@ public class MyPong extends Application {
 
             }
 
+            //prints it
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
         }
@@ -151,9 +185,21 @@ public class MyPong extends Application {
     }
 
 
-    private void checkGoal(Ball ball){
 
+    /**
+     *Checks goal for play method. Remember scored was a return value
+     *from checkBallBounds method in ball class
+     *where return depends on whose player scored
+     */
+    private void checkGoal(int scored){
 
+        if(scored==1){
+            System.out.println( "player1 goal");
+        }
+
+        if(scored == 2){
+            System.out.println( "player2 goal");
+        }
 
     }
 

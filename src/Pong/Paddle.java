@@ -5,7 +5,8 @@ package Pong;
  Made by        PatrickSys
  Date           05/02/2021
  Package        Pong
- Description:
+ Description: The Paddle class stores a paddle with it's attributes such
+ as it's position and it is formed by a rectangle.
  ************************************************************************/
 
 import javafx.scene.Node;
@@ -71,13 +72,22 @@ public class Paddle extends Rectangle {
         this.repaint();
     }
 
+
+    /**
+     * Repaint
+     */
+
     private void repaint() {
         this.paddle.setLayoutX(position.posX);
         this.paddle.setLayoutY(position.posY);
     }
 
+    /**
+     * Check rectangle bounds and return depending on the bound found
+     */
     public int checkPaddleBounds() {
 
+        // TODO limits relatius
         //comprova els límits dels rectangles
         final boolean atTopBound = -canvas.getHeight() >= ((paddle.getLayoutY()) * 2 - this.height);
         final boolean atBottomBound = 0 <= ((paddle.getLayoutY()) - 2 * this.height);
@@ -85,30 +95,16 @@ public class Paddle extends Rectangle {
 
         //retornam segons el limit trobat
         if (atTopBound) {
-            System.out.println(getBotPosition());
-
-            System.out.println("top bound");
-
             return +1;
         }
 
         if (atBottomBound) {
-            System.out.println("bot bound");
             return -1;
-        } else {
+        }
+        else {
             return 0;
         }
     }
 
-
-
-    public int getTopPosition() {
-
-        return this.position.posY-this.height/2;
-    }
-    public int getBotPosition(){
-
-        return this.position.posY+this.height/2;
-    }
 
 }

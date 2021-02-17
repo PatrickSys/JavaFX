@@ -30,35 +30,43 @@ import javafx.scene.shape.Circle;
 
 
 
-        public void moveBall(){
+        public int moveBall(){
 
                 //check limits and relocates ball
-                checkBallBounds();
+                int limit = checkBallBounds();
                 circle.setLayoutX(circle.getLayoutX() + deltaX);
                 circle.setLayoutY(circle.getLayoutY() + deltaY);
+                return limit;
         }
 
-        private void checkBallBounds(){
+        private int checkBallBounds(){
                 final Bounds bounds = canvas.getBoundsInLocal();
                 final boolean rightLimit = circle.getLayoutX() >= (bounds.getMaxX() - circle.getRadius());
                 final boolean leftLimit = circle.getLayoutX() <= (bounds.getMinX() + circle.getRadius());
                 final boolean botLimit = circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius());
                 final boolean topLimit = circle.getLayoutY() <= (bounds.getMinY() + circle.getRadius());
-
+                int limit = 0;
                //System.out.println(circle.getLayoutY() + "circle Y");
 
 
-                if (rightLimit || leftLimit) {
+                if (rightLimit) {
 
                         // Inverse X to mantain trajectory
                         deltaX *= -1;
-                        System.out.println(circle.getLayoutX());
+                        limit = 1;
+                }
+                if(leftLimit){
+
+                        deltaX *= -1;
+                        limit = 2;
                 }
                 if (botLimit || topLimit) {
 
                         // Inverse Y to mantain trajectory
                         deltaY *= -1;
+
                 }
+                return limit;
         }
 
 

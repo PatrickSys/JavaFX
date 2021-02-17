@@ -1,6 +1,5 @@
 package Pong;
 
-import PongSounds.Sounds;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -12,9 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import java.awt.*;
 import java.io.File;
 
 
@@ -34,12 +31,15 @@ public class MyPong extends Application {
      */
     public static Pane canvas;
     private final int WIDTH = 800;
-    private final int HEIGHT = 800;
-    private final int radius = 15;
+    private final int HEIGHT = 600;
+    private final int radius = 10;
     private final int paddleHeight = 100;
     private final int paddleWidth = 10;
     private final int paddle1PosX = 20;
     private final int paddle2PosX = 760;
+    private static Label player1Points;
+    private static Label player2points;
+
 
 
 
@@ -49,18 +49,22 @@ public class MyPong extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+
 
         canvas = new Pane();
         final Scene scene = new Scene(canvas, WIDTH, HEIGHT);
 
+        Label player1Points = new Label();
+
 
         //create scene, with pane
         primaryStage.setTitle("P O N G");
-        canvas.setStyle("-fx-background-color: BLACK ");
+        canvas.setStyle("-fx-background-color: WHITE ");
         primaryStage.setScene(scene);
         primaryStage.show();
         canvas.requestFocus();
+
 
 
         //create players with it's paddles
@@ -82,37 +86,16 @@ public class MyPong extends Application {
         canvas.setOnKeyPressed(e -> {
 
             switch (e.getCode()) {
-                case W:
-                  if(player1.paddle.checkPaddleBounds()!=1) {
-                      player1.paddle.moveUp();
-                  }
-                    break;
-                case S:
-
-                    if(player1.paddle.checkPaddleBounds()!=-1) {
-                        player1.paddle.moveDown();
-                    }
-
-                    break;
-
-                case UP:
-                 if(player2.paddle.checkPaddleBounds()!=1) {
-                        player2.paddle.moveUp();
-                    }
-                    break;
-                case DOWN:
-
-                    if(player2.paddle.checkPaddleBounds()!=-1) {
-                        player2.paddle.moveDown();
-                    }
-                    break;
-
+                case W -> player1.paddle.moveUp();
+                case S -> player1.paddle.moveDown();
+                case UP -> player2.paddle.moveUp();
+                case DOWN -> player2.paddle.moveDown();
             }
         });
 
 
         //thread main is calling moveBall while checking collisions between paddles and the ball
-        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(3), new EventHandler<ActionEvent>() {
+        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(12), new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(final ActionEvent t) {
@@ -142,7 +125,7 @@ public class MyPong extends Application {
 
         //invoke moveBall then play around it
         int scored = ball.moveBall();
-        checkGoal(scored);
+        checkGoal(scored, ball);
         checkCollision(ball, player1.paddle);
         checkCollision(ball, player2.paddle);
 
@@ -154,8 +137,6 @@ public class MyPong extends Application {
      *if top or bottom of the paddle are hit, it only reverses Y
      */
     private void checkCollision(Ball ball, Paddle paddle){
-
-
 
 
 
@@ -181,6 +162,9 @@ public class MyPong extends Application {
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
         }
+        this.player1Points = new Label();
+        this.player1Points.setText("0");
+        this.player1Points.setVisible(true);
 
     }
 
@@ -191,14 +175,38 @@ public class MyPong extends Application {
      *from checkBallBounds method in ball class
      *where return depends on whose player scored
      */
-    private void checkGoal(int scored){
+    private void checkGoal(int scored, Ball ball){
 
         if(scored==1){
-            System.out.println( "player1 goal");
+            //System.out.println( "player1 goal");
+            //Scene p1goal = new Scene(canvas, WIDTH, HEIGHT);
+            try {
+                System.out.println("player1");
+
+                Thread.sleep(100);
+
+
+
+
+                ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         if(scored == 2){
-            System.out.println( "player2 goal");
+            //System.out.println( "player2 goal");
+            try {
+                Thread.sleep(100);
+
+
+                ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
     }

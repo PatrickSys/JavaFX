@@ -15,6 +15,6 @@ public class Player {
 
 
     public Player(Pane canvas, int paddlPosX, int paddleHeight, int paddleWidth){
-        this.paddle = new Paddle(canvas, paddleHeight, paddleWidth, paddlPosX,(int) (canvas.getHeight() -120)/2, "WHITE" );
+        this.paddle = new Paddle(canvas, paddleHeight, paddleWidth, paddlPosX,(int) (canvas.getHeight() -paddleHeight)/2, "WHITE" );
     }
 }

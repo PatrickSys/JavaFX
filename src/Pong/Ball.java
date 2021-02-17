@@ -52,12 +52,11 @@ import javafx.scene.shape.Circle;
                 if (rightLimit) {
 
                         // Inverse X to mantain trajectory
-                        deltaX *= -1;
+
                         limit = 1;
                 }
                 if(leftLimit){
 
-                        deltaX *= -1;
                         limit = 2;
                 }
                 if (botLimit || topLimit) {

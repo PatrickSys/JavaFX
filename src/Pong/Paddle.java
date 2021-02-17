@@ -31,7 +31,7 @@ public class Paddle extends Rectangle {
     Position position;
 
 
-    int speed = 15;
+    int speed = 10;
     Pane canvas;
     Node paddle;
     int width;
@@ -60,7 +60,9 @@ public class Paddle extends Rectangle {
      * Move rectangle up
      */
     public void moveUp() {
-        position.posY = position.posY - this.speed;
+        if(checkPaddleBounds()!=1) {
+            position.posY = position.posY - this.speed;
+        }
         this.repaint();
     }
 
@@ -68,7 +70,9 @@ public class Paddle extends Rectangle {
      * Move rectangle down
      */
     public void moveDown() {
-        position.posY = position.posY + this.speed;
+        if(checkPaddleBounds()!=-1) {
+            position.posY = position.posY + this.speed;
+        }
         this.repaint();
     }
 
@@ -89,15 +93,17 @@ public class Paddle extends Rectangle {
 
         // TODO limits relatius
         //bounds calculation
-        final boolean atTopBound = -canvas.getHeight() > ((paddle.getLayoutY()) * 2 - (canvas.getHeight()/5));
-        final boolean atBottomBound = 0 == ((paddle.getLayoutY()) - 2 * (canvas.getHeight()/5));
+        final boolean atTopBound = -canvas.getHeight()/2 >= ((paddle.getLayoutY()) - (height/2));
+        final boolean atBottomBound = canvas.getHeight()/2 <= (paddle.getLayoutY() +  (height/2));
 
-        System.out.println(paddle.getLayoutY());
+
+        //System.out.println( canvas.getHeight()/10 + " canvas height");
+        System.out.println( paddle.getLayoutY() + " getLayour");
 
 
         //retornam segons el limit trobat
         if (atTopBound) {
-            return +1;
+            return 1;
         }
 
         if (atBottomBound) {

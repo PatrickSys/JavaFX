@@ -6,13 +6,18 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
+
 import java.io.File;
+
+
 
 
 /************************************************************************
@@ -37,8 +42,11 @@ public class MyPong extends Application {
     private final int paddleWidth = 10;
     private final int paddle1PosX = 20;
     private final int paddle2PosX = 760;
-    private static Label player1Points;
-    private static Label player2points;
+    private Label player1Points;
+    private Label player2Points;
+
+
+
 
 
 
@@ -49,38 +57,38 @@ public class MyPong extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) {
-
-
-        canvas = new Pane();
-        final Scene scene = new Scene(canvas, WIDTH, HEIGHT);
-
-        Label player1Points = new Label();
-
+    public void start(final Stage primaryStage) {
 
         //create scene, with pane
-        primaryStage.setTitle("P O N G");
-        canvas.setStyle("-fx-background-color: WHITE ");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        canvas.requestFocus();
-
-
+        canvas = new Pane();
+        final Scene scene = new Scene(canvas, WIDTH, HEIGHT);
 
         //create players with it's paddles
         Player player1 = new Player(canvas, paddle1PosX, paddleHeight, paddleWidth);
         Player player2 = new Player(canvas,paddle2PosX, paddleHeight, paddleWidth);
 
 
+        primaryStage.setTitle("P O N G");
+        canvas.setStyle("-fx-background-color: BLACK");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        (int)(canvas.getWidth() / 2  - font.getSize()*2
+        //player1Points = new Label("0");
+        //player2Points = new Label("0");
+        player1.settlePoints((int)(canvas.getWidth() / 2  - player1.getFont().getSize())*2,player1Points);
+        player2.settlePoints((int)(canvas.getWidth() / 2  + .getSize()*2);
+
         //create the ball
         Ball ball = new Ball(canvas, radius, Color.BLUE);
         ball.circle.relocate((WIDTH /2)- radius, (HEIGHT /2)- radius);
 
 
+
         //add shapes to pane
         canvas.getChildren().addAll(ball.circle);
         canvas.getChildren().addAll(player1.paddle, player2.paddle);
-
+        canvas.getChildren().addAll(player1.playerPoints, player2.playerPoints);
+        canvas.requestFocus();
 
         //case on paddle moves
         canvas.setOnKeyPressed(e -> {
@@ -100,14 +108,10 @@ public class MyPong extends Application {
             @Override
             public void handle(final ActionEvent t) {
 
-
-
                 play(ball, player1, player2);
-
-
+                
                 }
         }));
-
 
         loop.setCycleCount(Timeline.INDEFINITE);
         loop.play();
@@ -117,9 +121,6 @@ public class MyPong extends Application {
     /**
      * Main method play, moves the ball while checking if a goal is scored
      * checks collisions
-     * @param ball
-     * @param player1
-     * @param player2
      */
     private void play(Ball ball, Player player1, Player player2){
 
@@ -129,7 +130,6 @@ public class MyPong extends Application {
         checkCollision(ball, player1.paddle);
         checkCollision(ball, player2.paddle);
 
-
     }
 
     /**
@@ -137,7 +137,6 @@ public class MyPong extends Application {
      *if top or bottom of the paddle are hit, it only reverses Y
      */
     private void checkCollision(Ball ball, Paddle paddle){
-
 
 
         //if bounds intersect means they're colliding
@@ -162,10 +161,6 @@ public class MyPong extends Application {
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
         }
-        this.player1Points = new Label();
-        this.player1Points.setText("0");
-        this.player1Points.setVisible(true);
-
     }
 
 
@@ -181,10 +176,7 @@ public class MyPong extends Application {
             //System.out.println( "player1 goal");
             //Scene p1goal = new Scene(canvas, WIDTH, HEIGHT);
             try {
-                System.out.println("player1");
-
                 Thread.sleep(100);
-
 
 
 
@@ -196,7 +188,6 @@ public class MyPong extends Application {
         }
 
         if(scored == 2){
-            //System.out.println( "player2 goal");
             try {
                 Thread.sleep(100);
 
@@ -210,7 +201,6 @@ public class MyPong extends Application {
         }
 
     }
-
 
 
 

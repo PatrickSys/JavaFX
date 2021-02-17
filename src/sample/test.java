@@ -18,9 +18,14 @@ public class test {
     public static void main(String[] args){
 
 
-        File Clap = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PaddleBounce.wav");
-        playSound(Clap);
+        int a = 3;
+        int b=a;
 
+
+        for(int i =0; i<10; i++){
+            a++;
+            System.out.println(a);
+        }
 
     }
 

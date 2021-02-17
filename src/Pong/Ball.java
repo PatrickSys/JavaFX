@@ -12,12 +12,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-        public class Ball{
+import static java.lang.StrictMath.abs;
+
+public class Ball{
         public double deltaX;
         public double deltaY;
         Circle circle;
-        public double speed = 1;
+        public double speed = 0.6;
         Pane canvas;
+        double increasedSpeed;
 
 
 
@@ -46,7 +49,6 @@ import javafx.scene.shape.Circle;
                 final boolean botLimit = circle.getLayoutY() >= (bounds.getMaxY() - circle.getRadius());
                 final boolean topLimit = circle.getLayoutY() <= (bounds.getMinY() + circle.getRadius());
                 int limit = 0;
-               //System.out.println(circle.getLayoutY() + "circle Y");
 
 
                 if (rightLimit) {
@@ -70,9 +72,10 @@ import javafx.scene.shape.Circle;
 
 
         //on develope
-        private void setSpeed(double speed){
-                this.deltaX= speed;
-                this.deltaY= speed;
+        public void setSpeed(double increase){
+
+
                   }
+
         }
 

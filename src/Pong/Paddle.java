@@ -97,10 +97,6 @@ public class Paddle extends Rectangle {
         final boolean atBottomBound = canvas.getHeight()/2 <= (paddle.getLayoutY() +  (height/2));
 
 
-        //System.out.println( canvas.getHeight()/10 + " canvas height");
-        System.out.println( paddle.getLayoutY() + " getLayour");
-
-
         //retornam segons el limit trobat
         if (atTopBound) {
             return 1;

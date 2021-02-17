@@ -9,8 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -42,10 +40,11 @@ public class MyPong extends Application {
     private final int paddleWidth = 10;
     private final int paddle1PosX = 20;
     private final int paddle2PosX = 760;
-    private Label player1Points;
-    private Label player2Points;
+    private final int maxPoints = 20;
 
-
+    int leftBounceID = 0;
+    int rightBounceID = 0;
+    int bounceID = 0;
 
 
 
@@ -65,18 +64,18 @@ public class MyPong extends Application {
 
         //create players with it's paddles
         Player player1 = new Player(canvas, paddle1PosX, paddleHeight, paddleWidth);
-        Player player2 = new Player(canvas,paddle2PosX, paddleHeight, paddleWidth);
+        Player player2 = new Player(canvas, paddle2PosX, paddleHeight, paddleWidth);
 
 
         primaryStage.setTitle("P O N G");
         canvas.setStyle("-fx-background-color: BLACK");
         primaryStage.setScene(scene);
         primaryStage.show();
-        (int)(canvas.getWidth() / 2  - font.getSize()*2
-        //player1Points = new Label("0");
-        //player2Points = new Label("0");
-        player1.settlePoints((int)(canvas.getWidth() / 2  - player1.getFont().getSize())*2,player1Points);
-        player2.settlePoints((int)(canvas.getWidth() / 2  + .getSize()*2);
+
+        //sets points labels to 0
+        player1.settlePoints(player1.player1Position);
+        player2.settlePoints(player2.player2Position);
+
 
         //create the ball
         Ball ball = new Ball(canvas, radius, Color.BLUE);
@@ -103,7 +102,7 @@ public class MyPong extends Application {
 
 
         //thread main is calling moveBall while checking collisions between paddles and the ball
-        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(12), new EventHandler<ActionEvent>() {
+        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(5), new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(final ActionEvent t) {
@@ -126,7 +125,7 @@ public class MyPong extends Application {
 
         //invoke moveBall then play around it
         int scored = ball.moveBall();
-        checkGoal(scored, ball);
+        onGoal(scored, ball, player1, player2);
         checkCollision(ball, player1.paddle);
         checkCollision(ball, player2.paddle);
 
@@ -139,6 +138,7 @@ public class MyPong extends Application {
     private void checkCollision(Ball ball, Paddle paddle){
 
 
+        //TODO try bounds ID
         //if bounds intersect means they're colliding
         if(ball.circle.getBoundsInParent().intersects(paddle.paddle.getBoundsInParent())){
 
@@ -146,8 +146,8 @@ public class MyPong extends Application {
             File bounce = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PaddleBounce.wav");
             PongSounds.Sounds.playSound(bounce);
 
-            //check if the ball touches paddle bot or top then reverse Y
-            if(ball.circle.getLayoutX()<paddle1PosX+paddleWidth+ball.circle.getRadius() || ball.circle.getLayoutX() > paddle2PosX - ball.circle.getRadius()){
+
+            if(ball.circle.getLayoutX()+1 < paddle1PosX + paddleWidth + ball.circle.getRadius() || ball.circle.getLayoutX()-1 > paddle2PosX - ball.circle.getRadius()){
                 System.out.println("TOCA ");
                 ball.deltaY *= -1;
             }
@@ -160,6 +160,10 @@ public class MyPong extends Application {
             //prints it
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
+
+
+            System.out.println(ball.deltaX);
+            //System.out.println(ball.speed);
         }
     }
 
@@ -170,17 +174,42 @@ public class MyPong extends Application {
      *from checkBallBounds method in ball class
      *where return depends on whose player scored
      */
-    private void checkGoal(int scored, Ball ball){
+    private void onGoal(int scored, Ball ball, Player player1, Player player2){
 
-        if(scored==1){
-            //System.out.println( "player1 goal");
-            //Scene p1goal = new Scene(canvas, WIDTH, HEIGHT);
+        //if any player wins sets final scene
+        if(player1.points == this.maxPoints){
+
+            System.out.println( "Player 1 won!");
+
+            try {
+                Thread.sleep(10);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        if(player2.points == this.maxPoints){
+
+            System.out.println( "Player 2 won!");
+
+            try{
+                Thread.sleep(10);
+            }catch (Exception e){
+
+            }
+        }
+
+
+        }
+
+        //if any player scored sets goal scene
+        if(scored == 1){
+
             try {
                 Thread.sleep(100);
-
-
-
+                System.out.println( "Player 1 Goal" );
+                player1.points++;
                 ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
+                player1.updatePoints();
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -190,9 +219,10 @@ public class MyPong extends Application {
         if(scored == 2){
             try {
                 Thread.sleep(100);
-
-
+                System.out.println( "Player 2 Goal" );
+                player2.points++;
                 ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
+                player2.updatePoints();
 
 
             }catch (Exception e){
@@ -200,7 +230,9 @@ public class MyPong extends Application {
             }
         }
 
+
     }
+
 
 
 

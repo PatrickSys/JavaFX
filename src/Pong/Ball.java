@@ -12,23 +12,27 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import static java.lang.StrictMath.abs;
+import java.util.Random;
+
 
 public class Ball{
         public double deltaX;
         public double deltaY;
         Circle circle;
-        public double speed = 0.6;
+        private double speed;
         Pane canvas;
-        double increasedSpeed;
+        double increasedSpeed = 1;
+        public double stockSpeed;
 
 
 
-        public Ball(Pane canvas, int radi,Color color) {
+        public Ball(Pane canvas, int radi, Color color, double speed) {
                 this.circle = new Circle(radi, color);
+                this.canvas = canvas;
+                this.speed = speed;
                 this.deltaX = speed;
-                this.deltaY = speed;
-                this.canvas=canvas;
+                this.deltaY = speed/1.5;
+                this.stockSpeed = speed;
         }
 
 
@@ -52,30 +56,55 @@ public class Ball{
 
 
                 if (rightLimit) {
-
-                        // Inverse X to mantain trajectory
-
                         limit = 1;
                 }
                 if(leftLimit){
-
                         limit = 2;
                 }
                 if (botLimit || topLimit) {
-
                         // Inverse Y to mantain trajectory
                         deltaY *= -1;
-
                 }
                 return limit;
         }
 
 
         //on develope
-        public void setSpeed(double increase){
+        public void increaseSpeed(double increase){
 
+                deltaY *= increase;
+                deltaX *= increase;
+                increasedSpeed *= increase;
 
                   }
-
+        public void resetSpeed(){
+                deltaY /= increasedSpeed;
+                deltaX /= increasedSpeed;
+                increasedSpeed = 1;
         }
+
+
+
+        //sets a random DeltaY for the ball
+        public void randomDeltaY(double decrease) {
+                Random random = new Random();
+                int min = -30;
+                int max = 30;
+                double angle = (random.nextInt(max-min) + min);
+                double delta = angle/100;
+                this.speed = stockSpeed / decrease;
+                this.deltaX = stockSpeed / decrease;
+                this.deltaY = delta;
+                System.out.println(delta);
+        }
+
+        public double getSpeed() {
+                return speed;
+        }
+
+        public double getStockSpeed() {
+                return stockSpeed;
+        }
+}
+
 

@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -42,9 +41,12 @@ public class MyPong extends Application {
     private final int paddle2PosX = 760;
     private final int maxPoints = 20;
 
-    int leftBounceID = 0;
-    int rightBounceID = 0;
+    //bouncing attributes, see below
+    int leftBounceID = 50;
+    int rightBounceID = 100;
     int bounceID = 0;
+    int collisionCounter = 0;
+
 
 
 
@@ -67,6 +69,7 @@ public class MyPong extends Application {
         Player player2 = new Player(canvas, paddle2PosX, paddleHeight, paddleWidth);
 
 
+
         primaryStage.setTitle("P O N G");
         canvas.setStyle("-fx-background-color: BLACK");
         primaryStage.setScene(scene);
@@ -78,7 +81,9 @@ public class MyPong extends Application {
 
 
         //create the ball
-        Ball ball = new Ball(canvas, radius, Color.BLUE);
+        Ball ball = new Ball(canvas, radius, Color.BLUE, 0.6);
+
+
         ball.circle.relocate((WIDTH /2)- radius, (HEIGHT /2)- radius);
 
 
@@ -102,7 +107,7 @@ public class MyPong extends Application {
 
 
         //thread main is calling moveBall while checking collisions between paddles and the ball
-        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(5), new EventHandler<ActionEvent>() {
+        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(3), new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(final ActionEvent t) {
@@ -136,35 +141,70 @@ public class MyPong extends Application {
      *if top or bottom of the paddle are hit, it only reverses Y
      */
     private void checkCollision(Ball ball, Paddle paddle){
+        //System.out.println(ball.deltaY + "there");
 
+        if(collisionCounter == 0){
+            ball.randomDeltaY(2);
+            collisionCounter++;
 
-        //TODO try bounds ID
+        }
+
         //if bounds intersect means they're colliding
         if(ball.circle.getBoundsInParent().intersects(paddle.paddle.getBoundsInParent())){
+
+
 
             //plays bounce sound
             File bounce = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PaddleBounce.wav");
             PongSounds.Sounds.playSound(bounce);
 
 
+            //if ball touches any side of the paddle only Y is inverted
             if(ball.circle.getLayoutX()+1 < paddle1PosX + paddleWidth + ball.circle.getRadius() || ball.circle.getLayoutX()-1 > paddle2PosX - ball.circle.getRadius()){
                 System.out.println("TOCA ");
                 ball.deltaY *= -1;
             }
 
             else{
-                ball.deltaX *= -1;
 
+                //if right paddle is hit, the bounce ID is assigned to the right bounce ID
+                if(ball.circle.getLayoutX() > canvas.getWidth()/2 && rightBounceID != bounceID){
+                    System.out.println("toca paleta dreta");
+                    rightBounceID++;
+                    bounceID=rightBounceID;
+                }
+                else{
+
+                    //left bounce ID is assigned
+                    System.out.println("toca paleta esquerra");
+                    leftBounceID++;
+                    bounceID=leftBounceID;
+                }
+                //ball trajectory is reversed anyways
+                ball.deltaX *= -1;
             }
 
-            //prints it
+            //every 5 hits the speed is increased
+            if(((leftBounceID-50)+(rightBounceID-100)) %5 == 0) {
+                ball.increaseSpeed(1.2);
+            }
+
+            //relocates it
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
 
+            //updates collisionCounter if a collision was detected. Increase the speed at the first collision
+            collisionCounter++;
+            if(collisionCounter == 2){
+                ball.increaseSpeed(2);
+                collisionCounter++;
+            }
 
-            System.out.println(ball.deltaX);
-            //System.out.println(ball.speed);
         }
+        //System.out.println(ball.getSpeed());
+        //System.out.println(ball.deltaX + " deltaX");
+        //System.out.println(collisionCounter);
+
     }
 
 
@@ -197,45 +237,52 @@ public class MyPong extends Application {
 
             }
         }
-
-
         }
 
-        //if any player scored sets goal scene
-        if(scored == 1){
 
+        //any player scored:
+        if(scored !=0){
+
+            //sleeps the thread
             try {
-                Thread.sleep(100);
+                Thread.sleep(400);
+                ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
+                resetBouncesIDs();
+                ball.resetSpeed();
+                collisionCounter = 0;
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(scored == 1){
+
                 System.out.println( "Player 1 Goal" );
                 player1.points++;
-                ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
                 player1.updatePoints();
 
-            }catch (Exception e){
-                e.printStackTrace();
             }
-        }
 
-        if(scored == 2){
-            try {
-                Thread.sleep(100);
+            if(scored == 2){
+
                 System.out.println( "Player 2 Goal" );
                 player2.points++;
-                ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
                 player2.updatePoints();
 
-
-            }catch (Exception e){
-                e.printStackTrace();
             }
-        }
 
+            System.out.println(ball.deltaY);
+
+        }
 
     }
 
-
-
-
+    //reset Bounces IDs to "stock"
+    private void resetBouncesIDs(){
+        leftBounceID = 50;
+        rightBounceID = 100;
+        bounceID = 0;
+    }
 
 
 }

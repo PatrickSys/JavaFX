@@ -40,6 +40,7 @@ public class Paddle extends Rectangle {
 
 
 
+
     public Paddle(Pane canvas, int height, int width, int posX, int posY,String color) {
         position = new Position(posX, posY);
         this.canvas = canvas;

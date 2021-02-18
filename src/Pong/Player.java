@@ -25,6 +25,7 @@ public class Player {
 
 
     public Player(Pane canvas, int paddlPosX, int paddleHeight, int paddleWidth){
+
         this.paddle = new Paddle(canvas, paddleHeight, paddleWidth, paddlPosX,(int) (canvas.getHeight() -paddleHeight)/2, "WHITE" );
         this.canvas=canvas;
         this.player1Position = (int)(canvas.getWidth() / 2  - font.getSize()*2);
@@ -37,6 +38,7 @@ public class Player {
         playerPoints.setTextFill(Color.WHITE);
         playerPoints.relocate(position, 0);
         playerPoints.setFont(getFont());
+
 
     }
     public void updatePoints(){

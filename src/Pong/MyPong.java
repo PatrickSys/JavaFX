@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -32,6 +33,7 @@ public class MyPong extends Application {
      * Attributes
      */
     public static Pane canvas;
+    public static Pane entryCanvas;
     private final int WIDTH = 800;
     private final int HEIGHT = 600;
     private final int radius = 10;
@@ -58,11 +60,15 @@ public class MyPong extends Application {
 
 
     @Override
-    public void start(final Stage primaryStage) {
+    public void start(Stage primaryStage){
 
         //create scene, with pane
         canvas = new Pane();
-        final Scene scene = new Scene(canvas, WIDTH, HEIGHT);
+        entryCanvas = new Pane();
+        Scene enterScreen = new Scene(entryCanvas, WIDTH, HEIGHT);
+
+        Scene game = new Scene(canvas, WIDTH, HEIGHT);
+        addLine();
 
         //create players with it's paddles
         Player player1 = new Player(canvas, paddle1PosX, paddleHeight, paddleWidth);
@@ -71,8 +77,22 @@ public class MyPong extends Application {
 
 
         primaryStage.setTitle("P O N G");
+        entryCanvas.setStyle("-fx-background-color: BLACK");
         canvas.setStyle("-fx-background-color: BLACK");
-        primaryStage.setScene(scene);
+
+        primaryStage.setScene(enterScreen);
+
+        entryCanvas.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case SPACE ->  primaryStage.setScene(game);
+
+            }
+        });
+
+
+
+
+
         primaryStage.show();
 
         //sets points labels to 0
@@ -115,7 +135,7 @@ public class MyPong extends Application {
             public void handle(final ActionEvent t) {
 
                 play(ball, player1, player2);
-                
+
                 }
         }));
 
@@ -287,6 +307,16 @@ public class MyPong extends Application {
         leftBounceID = 50;
         rightBounceID = 100;
         bounceID = 0;
+    }
+
+    private void addLine(){
+
+        Line line = new Line(WIDTH/2, HEIGHT, WIDTH/2, 0);
+        line.setStroke(Color.WHITE);
+        line.setStrokeWidth(2);
+        line.getStrokeDashArray().addAll(10d);
+        canvas.getChildren().add(line);
+
     }
 
 

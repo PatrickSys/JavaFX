@@ -31,7 +31,7 @@ public class Paddle extends Rectangle {
     Position position;
 
 
-    int speed = 10;
+    int speed = 20;
     Pane canvas;
     Node paddle;
     int width;
@@ -91,7 +91,7 @@ public class Paddle extends Rectangle {
      */
     public int checkPaddleBounds() {
 
-        // TODO limits relatius
+
         //bounds calculation
         final boolean atTopBound = -canvas.getHeight()/2 >= ((paddle.getLayoutY()) - (height/2));
         final boolean atBottomBound = canvas.getHeight()/2 <= (paddle.getLayoutY() +  (height/2));

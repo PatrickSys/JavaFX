@@ -35,7 +35,7 @@ public class MyPong extends Application {
     private final int WIDTH = 800;
     private final int HEIGHT = 600;
     private final int radius = 10;
-    private final int paddleHeight = 100;
+    private final int paddleHeight = 80;
     private final int paddleWidth = 10;
     private final int paddle1PosX = 20;
     private final int paddle2PosX = 760;
@@ -81,10 +81,12 @@ public class MyPong extends Application {
 
 
         //create the ball
-        Ball ball = new Ball(canvas, radius, Color.BLUE, 0.6);
+        Ball ball = new Ball(canvas, radius, Color.WHITE, 0.8);
 
-
+        //set random trajectory for the ball
+        ball.randomDeltaY(2,'+');
         ball.circle.relocate((WIDTH /2)- radius, (HEIGHT /2)- radius);
+
 
 
 
@@ -141,22 +143,23 @@ public class MyPong extends Application {
      *if top or bottom of the paddle are hit, it only reverses Y
      */
     private void checkCollision(Ball ball, Paddle paddle){
-        //System.out.println(ball.deltaY + "there");
 
-        if(collisionCounter == 0){
-            ball.randomDeltaY(2);
-            collisionCounter++;
 
-        }
+        File paddleBounce = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\AtariPaddleBounce.wav");
 
         //if bounds intersect means they're colliding
         if(ball.circle.getBoundsInParent().intersects(paddle.paddle.getBoundsInParent())){
+            //updates collisionCounter if a collision was detected. Increase the speed at the first collision
+            collisionCounter++;
 
-
+            if(collisionCounter == 1){
+                ball.increaseSpeed(2);
+                collisionCounter++;
+            }
 
             //plays bounce sound
-            File bounce = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PaddleBounce.wav");
-            PongSounds.Sounds.playSound(bounce);
+
+
 
 
             //if ball touches any side of the paddle only Y is inverted
@@ -169,14 +172,15 @@ public class MyPong extends Application {
 
                 //if right paddle is hit, the bounce ID is assigned to the right bounce ID
                 if(ball.circle.getLayoutX() > canvas.getWidth()/2 && rightBounceID != bounceID){
-                    System.out.println("toca paleta dreta");
+                    PongSounds.Sounds.playSound(paddleBounce);
+
                     rightBounceID++;
                     bounceID=rightBounceID;
                 }
                 else{
 
                     //left bounce ID is assigned
-                    System.out.println("toca paleta esquerra");
+                    PongSounds.Sounds.playSound(paddleBounce);
                     leftBounceID++;
                     bounceID=leftBounceID;
                 }
@@ -193,17 +197,10 @@ public class MyPong extends Application {
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
 
-            //updates collisionCounter if a collision was detected. Increase the speed at the first collision
-            collisionCounter++;
-            if(collisionCounter == 2){
-                ball.increaseSpeed(2);
-                collisionCounter++;
-            }
+
+
 
         }
-        //System.out.println(ball.getSpeed());
-        //System.out.println(ball.deltaX + " deltaX");
-        //System.out.println(collisionCounter);
 
     }
 
@@ -215,6 +212,7 @@ public class MyPong extends Application {
      *where return depends on whose player scored
      */
     private void onGoal(int scored, Ball ball, Player player1, Player player2){
+        File goalSound = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PointSound.wav");
 
         //if any player wins sets final scene
         if(player1.points == this.maxPoints){
@@ -234,7 +232,7 @@ public class MyPong extends Application {
             try{
                 Thread.sleep(10);
             }catch (Exception e){
-
+            e.printStackTrace();
             }
         }
         }
@@ -245,11 +243,12 @@ public class MyPong extends Application {
 
             //sleeps the thread
             try {
-                Thread.sleep(400);
+                Thread.sleep(100);
                 ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
                 resetBouncesIDs();
                 ball.resetSpeed();
                 collisionCounter = 0;
+
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -258,20 +257,26 @@ public class MyPong extends Application {
             if(scored == 1){
 
                 System.out.println( "Player 1 Goal" );
+                PongSounds.Sounds.playSound(goalSound);
                 player1.points++;
                 player1.updatePoints();
+                ball.randomDeltaY(2,'+');
+                collisionCounter=0;
 
             }
 
             if(scored == 2){
 
                 System.out.println( "Player 2 Goal" );
+                PongSounds.Sounds.playSound(goalSound);
                 player2.points++;
                 player2.updatePoints();
+                ball.randomDeltaY(2, '-');
+                collisionCounter=0;
 
             }
 
-            System.out.println(ball.deltaY);
+
 
         }
 

@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.io.File;
 import java.util.Random;
 
 
@@ -23,6 +24,7 @@ public class Ball{
         Pane canvas;
         double increasedSpeed = 1;
         public double stockSpeed;
+        File wallSound = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\WallSound.wav");
 
 
 
@@ -62,6 +64,8 @@ public class Ball{
                         limit = 2;
                 }
                 if (botLimit || topLimit) {
+
+                        PongSounds.Sounds.playSound(wallSound);
                         // Inverse Y to mantain trajectory
                         deltaY *= -1;
                 }
@@ -86,16 +90,22 @@ public class Ball{
 
 
         //sets a random DeltaY for the ball
-        public void randomDeltaY(double decrease) {
+        public void randomDeltaY(double decrease, char trajectory) {
                 Random random = new Random();
                 int min = -30;
                 int max = 30;
                 double angle = (random.nextInt(max-min) + min);
                 double delta = angle/100;
                 this.speed = stockSpeed / decrease;
-                this.deltaX = stockSpeed / decrease;
+
+                if(trajectory=='+') {
+                        this.deltaX = stockSpeed / decrease;
+                }
+                else if(trajectory=='-'){
+                        this.deltaX = -stockSpeed/decrease;
+                }
                 this.deltaY = delta;
-                System.out.println(delta);
+
         }
 
         public double getSpeed() {

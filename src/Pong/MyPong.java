@@ -48,7 +48,7 @@ public class MyPong extends Application {
     int rightBounceID = 100;
     int bounceID = 0;
     int collisionCounter = 0;
-
+    boolean spaced=false;
 
 
 
@@ -64,8 +64,8 @@ public class MyPong extends Application {
 
         //create scene, with pane
         canvas = new Pane();
-        entryCanvas = new Pane();
-        Scene enterScreen = new Scene(entryCanvas, WIDTH, HEIGHT);
+        //entryCanvas = new Pane();
+        //Scene enterScreen = new Scene(entryCanvas, WIDTH, HEIGHT);
 
         Scene game = new Scene(canvas, WIDTH, HEIGHT);
         addLine();
@@ -77,23 +77,31 @@ public class MyPong extends Application {
 
 
         primaryStage.setTitle("P O N G");
-        entryCanvas.setStyle("-fx-background-color: BLACK");
+        //entryCanvas.setStyle("-fx-background-color: BLACK");
         canvas.setStyle("-fx-background-color: BLACK");
 
-        primaryStage.setScene(enterScreen);
-
-        entryCanvas.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case SPACE ->  primaryStage.setScene(game);
-
-            }
-        });
-
-
-
-
-
+        primaryStage.setScene(game);
         primaryStage.show();
+
+
+        //primaryStage.setScene(enterScreen);
+
+        while(!spaced) {
+            try {
+                Thread.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            canvas.setOnKeyPressed(e -> {
+                switch (e.getCode()) {
+                    case SPACE -> spaced = true;
+
+                }
+            });
+        }
+
+
+
 
         //sets points labels to 0
         player1.settlePoints(player1.player1Position);

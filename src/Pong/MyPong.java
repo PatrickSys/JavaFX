@@ -6,9 +6,13 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -41,14 +45,16 @@ public class MyPong extends Application {
     private final int paddleWidth = 10;
     private final int paddle1PosX = 20;
     private final int paddle2PosX = 760;
-    private final int maxPoints = 20;
+    private final int maxPoints = 3;
 
     //bouncing attributes, see below
     int leftBounceID = 50;
     int rightBounceID = 100;
     int bounceID = 0;
     int collisionCounter = 0;
-    boolean spaced=false;
+    File goalSound = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PointSound.wav");
+    Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
+    Label endLabel = new Label("Game over");
 
 
 
@@ -64,9 +70,6 @@ public class MyPong extends Application {
 
         //create scene, with pane
         canvas = new Pane();
-        //entryCanvas = new Pane();
-        //Scene enterScreen = new Scene(entryCanvas, WIDTH, HEIGHT);
-
         Scene game = new Scene(canvas, WIDTH, HEIGHT);
         addLine();
 
@@ -77,36 +80,14 @@ public class MyPong extends Application {
 
 
         primaryStage.setTitle("P O N G");
-        //entryCanvas.setStyle("-fx-background-color: BLACK");
         canvas.setStyle("-fx-background-color: BLACK");
-
         primaryStage.setScene(game);
         primaryStage.show();
-
-
-        //primaryStage.setScene(enterScreen);
-
-        while(!spaced) {
-            try {
-                Thread.sleep(3);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            canvas.setOnKeyPressed(e -> {
-                switch (e.getCode()) {
-                    case SPACE -> spaced = true;
-
-                }
-            });
-        }
-
-
 
 
         //sets points labels to 0
         player1.settlePoints(player1.player1Position);
         player2.settlePoints(player2.player2Position);
-
 
         //create the ball
         Ball ball = new Ball(canvas, radius, Color.WHITE, 0.8);
@@ -117,38 +98,54 @@ public class MyPong extends Application {
 
 
 
-
         //add shapes to pane
         canvas.getChildren().addAll(ball.circle);
         canvas.getChildren().addAll(player1.paddle, player2.paddle);
         canvas.getChildren().addAll(player1.playerPoints, player2.playerPoints);
         canvas.requestFocus();
 
-        //case on paddle moves
+
+        //case on space to start the game
         canvas.setOnKeyPressed(e -> {
 
-            switch (e.getCode()) {
-                case W -> player1.paddle.moveUp();
-                case S -> player1.paddle.moveDown();
-                case UP -> player2.paddle.moveUp();
-                case DOWN -> player2.paddle.moveDown();
+            //Per què comença bolla a un cantó?
+            if (e.getCode()== KeyCode.SPACE) {
+                System.out.println("space");
+                //ball.circle.relocate(WIDTH/2, HEIGHT/2);
+
+                //case on paddle moves
+                canvas.setOnKeyPressed(i -> {
+
+                    switch (i.getCode()) {
+                        case W -> player1.paddle.moveUp();
+                        case S -> player1.paddle.moveDown();
+                        case UP -> player2.paddle.moveUp();
+                        case DOWN -> player2.paddle.moveDown();
+                    }
+                });
+
+                //thread main is calling moveBall while checking collisions between paddles and the ball
+                final Timeline loop = new Timeline(new KeyFrame(Duration.millis(3), new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public  void handle(final ActionEvent t) {
+
+                        play(ball, player1, player2);
+
+                    }
+
+                }));
+
+                loop.setCycleCount(Timeline.INDEFINITE);
+                loop.play();
+
             }
         });
 
 
-        //thread main is calling moveBall while checking collisions between paddles and the ball
-        final Timeline loop = new Timeline(new KeyFrame(Duration.millis(3), new EventHandler<ActionEvent>() {
 
-            @Override
-            public void handle(final ActionEvent t) {
 
-                play(ball, player1, player2);
 
-                }
-        }));
-
-        loop.setCycleCount(Timeline.INDEFINITE);
-        loop.play();
     }
 
 
@@ -164,6 +161,8 @@ public class MyPong extends Application {
         checkCollision(ball, player1.paddle);
         checkCollision(ball, player2.paddle);
 
+
+
     }
 
     /**
@@ -177,16 +176,15 @@ public class MyPong extends Application {
 
         //if bounds intersect means they're colliding
         if(ball.circle.getBoundsInParent().intersects(paddle.paddle.getBoundsInParent())){
+
             //updates collisionCounter if a collision was detected. Increase the speed at the first collision
             collisionCounter++;
 
+            //at first bounce sets speed again to stock
             if(collisionCounter == 1){
                 ball.increaseSpeed(2);
                 collisionCounter++;
             }
-
-            //plays bounce sound
-
 
 
 
@@ -224,10 +222,6 @@ public class MyPong extends Application {
             //relocates it
             ball.circle.setLayoutX(ball.circle.getLayoutX() + ball.deltaX);
 
-
-
-
-
         }
 
     }
@@ -239,31 +233,25 @@ public class MyPong extends Application {
      *from checkBallBounds method in ball class
      *where return depends on whose player scored
      */
-    private void onGoal(int scored, Ball ball, Player player1, Player player2){
-        File goalSound = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\PointSound.wav");
+    private void onGoal(int scored, Ball ball, Player player1, Player player2) {
+
 
         //if any player wins sets final scene
-        if(player1.points == this.maxPoints){
+        if(player1.points == this.maxPoints) {
 
-            System.out.println( "Player 1 won!");
+            System.out.println("Player 1 won!");
+             endGame(MyPong.this);
 
-            try {
-                Thread.sleep(10);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        }
 
-        if(player2.points == this.maxPoints){
+            if(player2.points == this.maxPoints){
 
             System.out.println( "Player 2 won!");
 
-            try{
-                Thread.sleep(10);
-            }catch (Exception e){
-            e.printStackTrace();
+                endGame(MyPong.this);
+
             }
-        }
-        }
+
 
 
         //any player scored:
@@ -271,12 +259,7 @@ public class MyPong extends Application {
 
             //sleeps the thread
             try {
-                Thread.sleep(100);
-                ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
-                resetBouncesIDs();
-                ball.resetSpeed();
-                collisionCounter = 0;
-
+                Thread.sleep(50);
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -284,30 +267,21 @@ public class MyPong extends Application {
 
             if(scored == 1){
 
-                System.out.println( "Player 1 Goal" );
-                PongSounds.Sounds.playSound(goalSound);
-                player1.points++;
-                player1.updatePoints();
+                System.out.println("aqui");
+                addGoal(player1, ball);
                 ball.randomDeltaY(2,'+');
-                collisionCounter=0;
-
             }
 
             if(scored == 2){
 
-                System.out.println( "Player 2 Goal" );
-                PongSounds.Sounds.playSound(goalSound);
-                player2.points++;
-                player2.updatePoints();
+                System.out.println("aqui1");
+                addGoal(player2, ball);
                 ball.randomDeltaY(2, '-');
-                collisionCounter=0;
-
             }
 
 
 
         }
-
     }
 
     //reset Bounces IDs to "stock"
@@ -324,6 +298,38 @@ public class MyPong extends Application {
         line.setStrokeWidth(2);
         line.getStrokeDashArray().addAll(10d);
         canvas.getChildren().add(line);
+
+    }
+    private void addGoal(Player player, Ball ball){
+
+        System.out.println(" Player goal");
+        PongSounds.Sounds.playSound(goalSound);
+        player.points++;
+        player.updatePoints();
+        collisionCounter = 0;
+        ball.circle.relocate(this.WIDTH/2,this.HEIGHT/2);
+        resetBouncesIDs();
+        ball.resetSpeed();
+
+    }
+    private void endGame(MyPong pong)  {
+
+
+        try {
+            pong.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        endLabel.setTextFill(Color.WHITE);
+        endLabel.relocate(WIDTH/2, 0);
+        endLabel.setFont(font);
+
 
     }
 

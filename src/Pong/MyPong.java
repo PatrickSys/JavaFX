@@ -45,8 +45,8 @@ public class MyPong extends Application {
     private final int radius = 10;
     private final int paddleHeight = 80;
     private final int paddleWidth = 10;
-    private final int paddle1PosX = 20;
-    private final int paddle2PosX = 760;
+    private final int paddle1PosX = paddleWidth*2;
+    private final int paddle2PosX = WIDTH-(paddleWidth*3);
     private final int maxPoints = 15;
     private int endCounter = 0;
 
@@ -98,12 +98,11 @@ public class MyPong extends Application {
         player2.settlePoints(player2.getPlayer2Position());
 
         //create the ball
-        Ball ball = new Ball(canvas, radius, Color.WHITE, 0.7);
+        Ball ball = new Ball(canvas, radius, Color.WHITE, 0.8);
 
-        //set random trajectory for the ball
-        ball.randomDeltaY(2,'+');
+        //sets ball with decreased velocity
         ball.circle.relocate((WIDTH /2)- radius, (HEIGHT /2)- radius);
-
+        ball.firstServe(2);
 
         //add shapes to pane
         addLine();
@@ -113,8 +112,8 @@ public class MyPong extends Application {
 
         //set the start Label "press Space to play"
         showLabel(startLabel, WIDTH /5);
-
         canvas.requestFocus();
+
         //case on space to start the game
         canvas.setOnKeyPressed(e -> {
 
@@ -146,6 +145,7 @@ public class MyPong extends Application {
 
                         play(ball, player1, player2);
 
+                        System.out.println(ball.deltaX);
                     }
                 }));
 
@@ -266,13 +266,13 @@ public class MyPong extends Application {
             if(scored == 1){
 
                 addGoal(player1, ball);
-                ball.randomDeltaY(2,'+');
+                ball.randomLocate(2,'+');
             }
 
             if(scored == 2){
 
                 addGoal(player2, ball);
-                ball.randomDeltaY(2, '-');
+                ball.randomLocate(2, '-');
             }
 
         }

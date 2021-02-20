@@ -87,32 +87,39 @@ public class Ball{
 
 
 
-        //sets a random DeltaY for the ball
-        public void randomDeltaY(double decrease, char trajectory) {
+        //sets a random DeltaY and spawn for the ball
+        public void randomLocate(double decrease, char trajectory) {
                 Random random = new Random();
-                int min = -45;
-                int max = 45;
+                int min = -30;
+                int max = 30;
                 double angle = (random.nextInt(max-min) + min);
                 double delta = angle/100;
                 this.speed = stockSpeed / decrease;
 
-                if(trajectory=='+') {
-                        this.deltaX = stockSpeed / decrease;
+                if(trajectory =='+') {
+                        this.deltaX = stockSpeed/decrease;
                 }
-                else if(trajectory=='-'){
+                else if(trajectory =='-'){
                         this.deltaX = -stockSpeed/decrease;
                 }
+                this.circle.relocate(canvas.getWidth()/2, (canvas.getHeight()*0.8) *Math.random());
                 this.deltaY = delta;
 
         }
 
 
          //Sets ball speed to 0 then relocates it to center, in purpose of making it "perfect"
-
         public void stopBall(){
                 this.deltaX = 0;
                 this.deltaY = 0;
                 circle.relocate((canvas.getWidth() /2)- circle.getRadius(), (canvas.getHeight() /2)- circle.getRadius());
+        }
+
+        //gives offset on first serve
+        public void firstServe(double offSet){
+                this.speed = stockSpeed/offSet;
+                this.deltaX = stockSpeed/offSet;
+                this.deltaY = -0.25 ;
         }
 
 

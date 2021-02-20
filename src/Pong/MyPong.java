@@ -62,7 +62,7 @@ public class MyPong extends Application {
     File goalSound = new File(getClass().getClassLoader().getResource("GoalSound.wav").getPath());
 
     //Labels
-    Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
+     Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
     Label startLabel = new Label("Press SPACE to start");
     Label endLabel = new Label("Game Over");
 
@@ -145,7 +145,6 @@ public class MyPong extends Application {
 
                         play(ball, player1, player2);
 
-                        System.out.println(ball.deltaX);
                     }
                 }));
 
@@ -199,7 +198,6 @@ public class MyPong extends Application {
 
             //if ball touches any side of the paddle only Y is inverted
             if(ball.circle.getLayoutX()+1 < paddle1PosX + paddleWidth + ball.circle.getRadius() || ball.circle.getLayoutX()-1 > paddle2PosX - ball.circle.getRadius()){
-                System.out.println("TOCA ");
                 ball.deltaY *= -1;
             }
 

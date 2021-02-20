@@ -21,10 +21,10 @@ public class Ball{
         public double deltaY;
         Circle circle;
         private double speed;
-        Pane canvas;
-        double increasedSpeed = 1;
+        private final Pane canvas;
+        private double increasedSpeed = 1;
         public double stockSpeed;
-        File wallSound = new File("C:\\Users\\bitaz\\IdeaProjects\\JavaFX\\src\\PongSounds\\WallSound.wav");
+        File wallSound = new File(getClass().getClassLoader().getResource("WallSound.wav").getPath());
 
 
 
@@ -33,10 +33,9 @@ public class Ball{
                 this.canvas = canvas;
                 this.speed = speed;
                 this.deltaX = speed;
-                this.deltaY = speed/1.5;
+                this.deltaY = speed / 1.5;
                 this.stockSpeed = speed;
         }
-
 
 
         public int moveBall(){
@@ -65,7 +64,7 @@ public class Ball{
                 }
                 if (botLimit || topLimit) {
 
-                        PongSounds.Sounds.playSound(wallSound);
+                        MyPong.playSound(wallSound);
                         // Inverse Y to mantain trajectory
                         deltaY *= -1;
                 }
@@ -73,7 +72,6 @@ public class Ball{
         }
 
 
-        //on develope
         public void increaseSpeed(double increase){
 
                 deltaY *= increase;
@@ -92,8 +90,8 @@ public class Ball{
         //sets a random DeltaY for the ball
         public void randomDeltaY(double decrease, char trajectory) {
                 Random random = new Random();
-                int min = -30;
-                int max = 30;
+                int min = -45;
+                int max = 45;
                 double angle = (random.nextInt(max-min) + min);
                 double delta = angle/100;
                 this.speed = stockSpeed / decrease;
@@ -108,13 +106,17 @@ public class Ball{
 
         }
 
-        public double getSpeed() {
-                return speed;
+
+         //Sets ball speed to 0 then relocates it to center, in purpose of making it "perfect"
+
+        public void stopBall(){
+                this.deltaX = 0;
+                this.deltaY = 0;
+                circle.relocate((canvas.getWidth() /2)- circle.getRadius(), (canvas.getHeight() /2)- circle.getRadius());
         }
 
-        public double getStockSpeed() {
-                return stockSpeed;
-        }
+
+
 }
 
 

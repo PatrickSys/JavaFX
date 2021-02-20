@@ -16,12 +16,12 @@ import javafx.scene.text.FontWeight;
 public class Player {
 
     Paddle paddle;
-    public Integer points=0;
+    private Integer points = 0;
     Label playerPoints;
-    private Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
-    Pane canvas;
-    public int player1Position;
-    public int player2Position;
+    private final Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
+    private final Pane canvas;
+    private final int player1Position;
+    private final int player2Position;
 
 
     public Player(Pane canvas, int paddlPosX, int paddleHeight, int paddleWidth){
@@ -57,11 +57,11 @@ public class Player {
         this.points++;
     }
 
-    public  Font getFont() {
+    private Font getFont() {
         return font;
     }
 
-    public  int  getFontSize() {
-        return (int)font.getSize();
+    public Integer getPoints() {
+        return points;
     }
 }

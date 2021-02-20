@@ -31,12 +31,10 @@ public class Paddle extends Rectangle {
     Position position;
 
 
-    int speed = 20;
-    Pane canvas;
-    Node paddle;
-    int width;
-    int height;
-    int topPosition;
+    private final int speed = 20;
+    private final Pane canvas;
+    final Node paddle;
+    private final int height;
 
 
 
@@ -46,14 +44,12 @@ public class Paddle extends Rectangle {
         this.canvas = canvas;
         this.paddle = new Rectangle(position.posX, position.posY, width, height);
         this.height = height;
-        this.width = width;
         position.posX = (int)paddle.getLayoutX();
         position.posY = (int)paddle.getLayoutY();
         this.paddle.setLayoutX(position.posX);
         this.paddle.setLayoutY(position.posY);
         this.canvas.getChildren().add(this.paddle);
         this.paddle.setStyle("-fx-fill:" + color + ";");
-        this.topPosition = posY + height/2;
 
     }
 
@@ -92,11 +88,9 @@ public class Paddle extends Rectangle {
      */
     public int checkPaddleBounds() {
 
-
         //bounds calculation
         final boolean atTopBound = -canvas.getHeight()/2 >= ((paddle.getLayoutY()) - (height/2));
         final boolean atBottomBound = canvas.getHeight()/2 <= (paddle.getLayoutY() +  (height/2));
-
 
         //retornam segons el limit trobat
         if (atTopBound) {

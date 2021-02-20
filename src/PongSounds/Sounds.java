@@ -13,7 +13,7 @@ import java.io.File;
 public class Sounds {
 
 
-    public static void playSound(File Sound) {
+    public static void playSounds(File Sound) {
 
         try {
 

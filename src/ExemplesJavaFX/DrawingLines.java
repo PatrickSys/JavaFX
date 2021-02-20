@@ -1,4 +1,4 @@
-package Pong;/************************************************************************
+package ExemplesJavaFX;/************************************************************************
  Made by        PatrickSys
  Date           18/02/2021
  Package        Pong
@@ -10,7 +10,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
 
 public class DrawingLines extends Application {

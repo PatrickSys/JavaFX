@@ -65,6 +65,7 @@ public class Ball{
                 if (botLimit || topLimit) {
 
                         MyPong.playSound(wallSound);
+
                         // Inverse Y to mantain trajectory
                         deltaY *= -1;
                 }
@@ -77,8 +78,8 @@ public class Ball{
                 deltaY *= increase;
                 deltaX *= increase;
                 increasedSpeed *= increase;
-
                   }
+
         public void resetSpeed(){
                 deltaY /= increasedSpeed;
                 deltaX /= increasedSpeed;

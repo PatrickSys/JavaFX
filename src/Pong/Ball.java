@@ -24,7 +24,7 @@ public class Ball{
         private final Pane canvas;
         private double increasedSpeed = 1;
         public double stockSpeed;
-        File wallSound = new File(getClass().getClassLoader().getResource("WallSound.wav").getPath());
+        final File wallSound = new File(getClass().getClassLoader().getResource("WallSound.wav").getPath());
 
 
 

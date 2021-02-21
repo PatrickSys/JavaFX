@@ -15,17 +15,26 @@ import javafx.scene.text.FontWeight;
 
 public class Player {
 
+    /**
+     * Attributes
+     */
     Paddle paddle;
     private Integer points = 0;
     Label playerPoints;
-    private final Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
+    Font font;
     private final Pane canvas;
     private final int player1Position;
     private final int player2Position;
 
 
+    /*
+      Creates and instance of pong to use it's setFont method and re-use code for this class
+      sets attributes and so on
+     */
     public Player(Pane canvas, int paddlPosX, int paddleHeight, int paddleWidth){
-
+        MyPong pong = new MyPong();
+        pong.setFont();
+        this.font = pong.getFont();
         this.paddle = new Paddle(canvas, paddleHeight, paddleWidth, paddlPosX,(int) (canvas.getHeight() -paddleHeight)/2, "WHITE" );
         this.canvas=canvas;
         this.player1Position = (int)(canvas.getWidth() / 2  - font.getSize()*2);
@@ -33,14 +42,15 @@ public class Player {
         this.playerPoints = new Label(points.toString());
     }
 
+    //sets points labels
     public void settlePoints(int position) {
 
         playerPoints.setTextFill(Color.WHITE);
         playerPoints.relocate(position, 0);
-        playerPoints.setFont(getFont());
-
-
+        playerPoints.setFont(font);
     }
+
+    //updates text labels with it's points
     public void updatePoints(){
         playerPoints.setText(points.toString());
     }
@@ -55,10 +65,6 @@ public class Player {
 
     public void goal(){
         this.points++;
-    }
-
-    private Font getFont() {
-        return font;
     }
 
     public Integer getPoints() {

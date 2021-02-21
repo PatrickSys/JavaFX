@@ -13,7 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -21,8 +20,8 @@ import javafx.util.Duration;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
-
-
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /************************************************************************
@@ -49,6 +48,7 @@ public class MyPong extends Application {
     private final int paddle2PosX = WIDTH-(paddleWidth*3);
     private final int maxPoints = 15;
     private int endCounter = 0;
+    public Font font;
 
     //bouncing attributes, see below
     private int leftBounceID = 50;
@@ -62,11 +62,8 @@ public class MyPong extends Application {
     File goalSound = new File(getClass().getClassLoader().getResource("GoalSound.wav").getPath());
 
     //Labels
-     Font font = Font.font("Verdana", FontWeight.EXTRA_BOLD, 40);
     Label startLabel = new Label("Press SPACE to start");
     Label endLabel = new Label("Game Over");
-
-
 
 
 
@@ -81,6 +78,7 @@ public class MyPong extends Application {
         //Create scene, with pane.
         canvas = new Pane();
         Scene game = new Scene(canvas, WIDTH, HEIGHT);
+        setFont();
 
         //create players with it's paddles
         Player player1 = new Player(canvas, paddle1PosX, paddleHeight, paddleWidth);
@@ -111,7 +109,7 @@ public class MyPong extends Application {
         canvas.getChildren().addAll(player1.playerPoints, player2.playerPoints);
 
         //set the start Label "press Space to play"
-        showLabel(startLabel, WIDTH /5);
+        showLabel(startLabel, WIDTH /3.3);
         canvas.requestFocus();
 
         //case on space to start the game
@@ -322,12 +320,12 @@ public class MyPong extends Application {
 
         //counter to help the label show up before sleeping the thread
         if (endCounter == 0) {
-            showLabel(endLabel, WIDTH / 3);
+            showLabel(endLabel, WIDTH / 2.7 );
 
             ball.stopBall();
         }
 
-        else if (endCounter == 10 ) {
+        else if (endCounter == 30 ) {
             try {
 
                 Thread.sleep(500);
@@ -353,14 +351,33 @@ public class MyPong extends Application {
         }
     }
 
-    //method to add labels and format them
-    private void showLabel(Label label, int Xlocation){
-        canvas.getChildren().addAll(label);
-        label.setTextFill(Color.WHITE);
-        label.relocate(Xlocation, HEIGHT/3);
-        label.setFont(font);
+    //method to add labels and set it's font
+    public void showLabel(Label label, double Xlocation){
+
+            canvas.getChildren().addAll(label);
+            label.setTextFill(Color.WHITE);
+            label.relocate(Xlocation, HEIGHT/3);
+            label.setFont(this.font);
+
+        }
+
+        //creates the font and sets the class font
+        public void setFont(){
+            InputStream fontStream = getClass().getClassLoader().getResourceAsStream("pixelFont.otf");
+            if (fontStream != null) {
+                this.font = Font.loadFont(fontStream, 40);
+
+                try {
+                    fontStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //getter
+    public Font getFont() {
+        return font;
     }
-
-
 }
 

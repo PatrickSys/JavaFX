@@ -28,18 +28,21 @@ public class Paddle extends Rectangle {
         }
     }
 
+    /**
+     * Attributes
+     */
     Position position;
-
-
     private final int speed = 20;
     private final Pane canvas;
     final Node paddle;
     private final int height;
 
 
-
-
-    public Paddle(Pane canvas, int height, int width, int posX, int posY,String color) {
+    /**
+     * Constructor, sets the attributes
+     * creates the rectangle for each paddle and it's style -color-
+     */
+    public Paddle(Pane canvas, int height, int width, int posX, int posY, String color) {
         position = new Position(posX, posY);
         this.canvas = canvas;
         this.paddle = new Rectangle(position.posX, position.posY, width, height);
@@ -50,7 +53,6 @@ public class Paddle extends Rectangle {
         this.paddle.setLayoutY(position.posY);
         this.canvas.getChildren().add(this.paddle);
         this.paddle.setStyle("-fx-fill:" + color + ";");
-
     }
 
     /**
@@ -73,11 +75,9 @@ public class Paddle extends Rectangle {
         this.repaint();
     }
 
-
     /**
      * Repaint
      */
-
     private void repaint() {
         this.paddle.setLayoutX(position.posX);
         this.paddle.setLayoutY(position.posY);
@@ -104,6 +104,4 @@ public class Paddle extends Rectangle {
             return 0;
         }
     }
-
-
 }

@@ -48,7 +48,7 @@ public class MyPong extends Application {
     private final int paddle2PosX = WIDTH-(paddleWidth*3);
     private final int maxPoints = 15;
     private int endCounter = 0;
-    public Font font;
+    private  Font font;
 
     //bouncing attributes, see below
     private int leftBounceID = 50;

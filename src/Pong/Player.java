@@ -37,8 +37,8 @@ public class Player {
         this.font = pong.getFont();
         this.paddle = new Paddle(canvas, paddleHeight, paddleWidth, paddlPosX,(int) (canvas.getHeight() -paddleHeight)/2, "WHITE" );
         this.canvas=canvas;
-        this.player1Position = (int)(canvas.getWidth() / 2  - font.getSize()*2);
-        this.player2Position = (int)(canvas.getWidth() / 2 + font.getSize()+10);
+        this.player1Position = (int)(canvas.getWidth() / 2  - pong.getFont().getSize()*2);
+        this.player2Position = (int)(canvas.getWidth() / 2 + pong.getFont().getSize()+10);
         this.playerPoints = new Label(points.toString());
     }
 

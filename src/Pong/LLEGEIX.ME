@@ -1,0 +1,89 @@
+# 53 - JavaFX - Pong
+
+Tractarem d'entrar de ple amb JavaFX fent el mític joc Pong.
+
+Es donen una sèrie d'instruccions, que veurem més endevant.
+
+Però aprofitant el pong com un exercici per aprendre una mica de JavaFX, com límits, "Shapes" -o formes-, els panells,
+matemàtiques fins i tot, hem intentat recrear el mític Pong de la atari.
+
+Encara que sempre amb un toc personal, sense dubte.
+
+## Començam
+
+En aquest fitxer trobarem coses a tenir en compte a l'hora de comprovar el funcionament del pong.
+Especial importància als recursos.
+
+### Requisits: 📋
+
+- Mides de la pantalla 800x600 (idealment configurat com una constant i que es pugui modificar simplement canviant el valor de les constants)
+- Velocitat de la pilota configurable. (es demana velocitat fixa, però opcionalment podeu implementar-ho amb velocitat variable durant el joc)
+- Moviment de la paleta serà amb les tecles de cursor amunt i abaix (jugador 1) i W i S (jugador 2).
+- La partida acaba quan un jugador arribar a 15.
+- Per començar la partida hauria de sortir un missatge "Pitja la tecla espai per començar" i efectivament el joc començarà
+ quan es pitji la tecla espai i no abans.
+- Quan qualcú arribi a 15 i acabi la partida sortirà el missatge "Game Over".
+- Cada vegada que es faci un punt, el joc es reiniciarà amb la pilota sortint des d'un punt aleatori de la línia d'enmig
+i en direcció cap al jugador que ha perdut el punt anterior.
+
+## Fet 🔧
+
+-Mides de la pantalla a 800x600 per defecte, hem intentat parametritzar totes les variables de mode que quan canviem
+la mesura del canvas, bolla o paletes seguirà sent totalment funcional.
+Aconseguit en tot excepte en les etiquetes, on ens ha costat ajustar-les.
+
+Velocitat de la pilota:
+Configurable al constructor (línia 99 del MyPong), incrementable amb increaseSpeed (línia 75 de Ball),
+i decrementable amb firstServe (línia 119 Ball), que hem usat per donar ventaja a la primera bolla.
+
+Cada punt la bolla torna a la seva velocitat donada al constructor amb resetSpeed (línia 82 Ball)
+Missatges de inici i game over fets.
+
+A cada punt la bolla surt amb la velocitat decrementada per l'offset i des d'un punt aleatori amb una direcció aleatòria
+
+### Afegit 🚀
+
+Principalment els sons del joc original (obtingut d'arxius amb llicencia lliure)
+També font "arcade"
+
+Cada 5 cops consecutius a la pilota, incrementar automàticament la velocitat de la pilota.
+
+
+# A tenir en compte ⚙️
+
+Recursos:
+Tots es troben dins la carpeta "resources", i estàn implementats al codi a:
+
+#So:
+
+PaddleBounce:
+```
+Línia 61 de Mypong, s'obté de la carpeta de recursos
+S'implementa a les línies 206 i 215 de MyPong (mètode CheckCollision),
+a cada rebot a la paleta es reprodueix el so.
+```
+
+WallSound:
+```
+Línia 27 de Ball
+Es reprodueix a la línia 67 de Ball, quan toca un límit inferior o superior.
+
+```
+GoalSound:
+```
+Línia 62 de MyPong
+Es reprodueix a la línia 67 de Ball, quan toca un límit inferior o superior.
+S'implementa a la línia 301 de MyPong, quan s'invoca el mètode addGoal()
+
+```
+#Fonts:
+Hi hem afegit una font lliure trobada a l'internet, a fi de donar-li un aspecte "retro"
+Hem creat el mètode setFont, línia 365 de MyPong, s'obté l'arxiu dels recursos i es crea la instància de Font.
+
+A showLabel (línia 360) s'usa la font per a les etiquetes d'inici i game over
+
+Al constructor de Player es crea una instància de MyPong per a assignar a la classe Player la mateixa font.
+S'utilitza després a settlePoints de la classe Player. Per donar-li forma a les etiquetes de punts.
+
+---
+⌨️ amb ❤️ per [PatrickSys](https://github.com/PatrickSys) 😊

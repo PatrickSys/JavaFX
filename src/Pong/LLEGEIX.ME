@@ -33,7 +33,7 @@ la mesura del canvas, bolla o paletes seguirà sent totalment funcional.
 Aconseguit en tot excepte en les etiquetes, on ens ha costat ajustar-les.
 
 Velocitat de la pilota:
-Configurable al constructor (línia 99 del MyPong), incrementable amb increaseSpeed (línia 75 de Ball),
+Configurable al constructor (línia 99 del Pong_Patrick_Rossello), incrementable amb increaseSpeed (línia 75 de Ball),
 i decrementable amb firstServe (línia 119 Ball), que hem usat per donar ventaja a la primera bolla.
 
 Cada punt la bolla torna a la seva velocitat donada al constructor amb resetSpeed (línia 82 Ball)
@@ -58,8 +58,8 @@ Tots es troben dins la carpeta "resources", i estàn implementats al codi a:
 
 PaddleBounce:
 ```
-Línia 61 de Mypong, s'obté de la carpeta de recursos
-S'implementa a les línies 206 i 215 de MyPong (mètode CheckCollision),
+Línia 61 de Pong_Patrick_Rossello, s'obté de la carpeta de recursos
+S'implementa a les línies 206 i 215 de Pong_Patrick_Rossello (mètode CheckCollision),
 a cada rebot a la paleta es reprodueix el so.
 ```
 
@@ -71,18 +71,18 @@ Es reprodueix a la línia 67 de Ball, quan toca un límit inferior o superior.
 ```
 GoalSound:
 ```
-Línia 62 de MyPong
+Línia 62 de Pong_Patrick_Rossello
 Es reprodueix a la línia 67 de Ball, quan toca un límit inferior o superior.
-S'implementa a la línia 301 de MyPong, quan s'invoca el mètode addGoal()
+S'implementa a la línia 301 de Pong_Patrick_Rossello, quan s'invoca el mètode addGoal()
 
 ```
 #Fonts:
 Hi hem afegit una font lliure trobada a l'internet, a fi de donar-li un aspecte "retro"
-Hem creat el mètode setFont, línia 365 de MyPong, s'obté l'arxiu dels recursos i es crea la instància de Font.
+Hem creat el mètode setFont, línia 365 de Pong_Patrick_Rossello, s'obté l'arxiu dels recursos i es crea la instància de Font.
 
 A showLabel (línia 360) s'usa la font per a les etiquetes d'inici i game over
 
-Al constructor de Player es crea una instància de MyPong per a assignar a la classe Player la mateixa font.
+Al constructor de Player es crea una instància de Pong_Patrick_Rossello per a assignar a la classe Player la mateixa font.
 S'utilitza després a settlePoints de la classe Player. Per donar-li forma a les etiquetes de punts.
 
 ---

@@ -32,7 +32,7 @@ import java.io.InputStream;
  ************************************************************************/
 
 
-public class MyPong extends Application {
+public class Pong_Patrick_Rossello extends Application {
 
 
     /**

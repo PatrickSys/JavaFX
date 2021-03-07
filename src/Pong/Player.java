@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class Player {
 
@@ -32,7 +31,7 @@ public class Player {
       sets attributes and so on
      */
     public Player(Pane canvas, int paddlPosX, int paddleHeight, int paddleWidth){
-        MyPong pong = new MyPong();
+        Pong_Patrick_Rossello pong = new Pong_Patrick_Rossello();
         pong.setFont();
         this.font = pong.getFont();
         this.paddle = new Paddle(canvas, paddleHeight, paddleWidth, paddlPosX,(int) (canvas.getHeight() -paddleHeight)/2, "WHITE" );

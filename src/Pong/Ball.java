@@ -64,7 +64,7 @@ public class Ball{
                 }
                 if (botLimit || topLimit) {
 
-                        MyPong.playSound(wallSound);
+                        Pong_Patrick_Rossello.playSound(wallSound);
 
                         // Inverse Y to mantain trajectory
                         deltaY *= -1;
